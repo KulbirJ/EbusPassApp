@@ -21,7 +21,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceSate){
         super.onCreate(savedInstanceSate);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.login);
         UserName = (EditText) findViewById(R.id.Username);
         Password = (EditText) findViewById(R.id.Password);
         ButtonLogin = (Button)findViewById((R.id.ButtonLogin));

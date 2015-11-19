@@ -7,10 +7,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_login"
+
     tools:context="com.example.ebuspass.ebuspassapp.LoginActivity"
     android:orientation="vertical">
     android:orientation="vertical"
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Welcome to eBusPass!"
+        android:id="@+id/welcome"
+        android:layout_gravity="center_horizontal" />
+
     <TextView
         android:layout_width="wrap_content"
         android:text="Username"
@@ -22,34 +31,24 @@
         android:layout_height="wrap_content" />
     <TextView
         android:layout_width="wrap_content"
-        android:text="First Name"
+        android:text="Password"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/First_Name"
+        android:id="@+id/Password"
         android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:text="Last Name"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/Last_Name"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:text="Email"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/Email"
-        android:layout_width="match_parent"
+        android:inputType="textPassword"
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/ButtonLogout"
-        android:text="Logout"
+        android:id="@+id/ButtonLogin"
+        android:text="Login"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/RegisterLink"
+        android:layout_width="wrap_content"
+        android:text="Register Here"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
         android:layout_height="wrap_content" />
 </LinearLayout>
