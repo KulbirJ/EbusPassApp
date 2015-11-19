@@ -21,12 +21,14 @@
             android:layout_height="match_parent"
             android:text="10 Rides - $24.50"
             android:layout_gravity="center_horizontal"
+            android:id="@+id/PerRideRadioButton"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Monthly Pass"
+            android:id="@+id/MonthlyRadioButton"
             android:layout_gravity="center_horizontal"/>
 
     </RadioGroup>
@@ -42,21 +44,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Youth - $55.00"
-            android:id="@+id/youthRadioButton"
+            android:id="@+id/YouthRadioButton"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post Secondary - $65.00"
-            android:id="@+id/postSecondaryRadioButton"
+            android:id="@+id/PostSecondaryRadioButton"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Adult - $75.00"
-            android:id="@+id/adultRadioButton"
+            android:id="@+id/AdultRadioButton"
             android:checked="false" />
     </RadioGroup>
 
@@ -97,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Purchase"
-        android:id="@+id/PurchaseButton"
+        android:id="@+id/ButtonPurchase"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
