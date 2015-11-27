@@ -41,6 +41,16 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
         Cost = (TextView) findViewById(R.id.Cost);
         CostLabel = (TextView) findViewById(R.id.CostLabel);
 
+        PassQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(!hasFocus) {
+                    Log.v("Quantity Focus Lost", "Updating cost...");
+                    updateCost();
+                }
+            }
+        });
+
         ButtonPurchase.setOnClickListener(this);
         MonthlyRadioButton.setOnClickListener(this);
         PerRideRadioButton.setOnClickListener(this);
@@ -53,14 +63,27 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    public void updateCost(double cost) {
+    public void updateCost() {
         if(PassQuantity.getText().toString().trim().length() == 0) {
             Cost.setText("0.00");
             return;
         }
 
         int quantity = Integer.parseInt(PassQuantity.getText().toString());
-        Cost.setText(String.format("%.2f", quantity * cost));
+        double cost = 0;
+
+        if(PerRideRadioButton.isChecked())
+            cost = 22.50;
+        else if (AdultRadioButton.isChecked())
+            cost = 75.00;
+        else if (PostSecondaryRadioButton.isChecked())
+            cost = 65.00;
+        else if(YouthRadioButton.isChecked())
+            cost = 55.00;
+
+        cost = cost*quantity;
+
+        Cost.setText(String.format("%.2f", cost));
 
     }
 
@@ -72,20 +95,16 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.MonthlyRadioButton:
                 MonthlyPassRadioGroup.setVisibility(View.VISIBLE);
-                updateCost(0);
+                updateCost();
                 break;
             case R.id.PerRideRadioButton:
                 MonthlyPassRadioGroup.setVisibility(View.GONE);
-                updateCost(24.50);
+                updateCost();
                 break;
             case R.id.AdultRadioButton:
-                updateCost(75.00);
-                break;
             case R.id.PostSecondaryRadioButton:
-                updateCost(65.00);
-                break;
             case R.id.YouthRadioButton:
-                updateCost(55);
+                updateCost();
                 break;
         }
     }
