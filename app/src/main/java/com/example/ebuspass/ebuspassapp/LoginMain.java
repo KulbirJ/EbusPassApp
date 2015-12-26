@@ -33,7 +33,7 @@ public class LoginMain extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.profile) {
-            startActivity(new Intent(this, Profile.class));
+            startActivity(new Intent(this, MainActivity.class));
             return true;
         }
 

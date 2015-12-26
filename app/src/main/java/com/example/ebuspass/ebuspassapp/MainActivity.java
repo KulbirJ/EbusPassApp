@@ -1,65 +1,77 @@
 package com.example.ebuspass.ebuspassapp;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.HashMap;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 
-    Button ButtonLogin;
-    EditText FirstName, UserName, LastName, Email;
+public class MainActivity extends Activity {
+
+    private TextView txtName;
+    private TextView txtEmail;
+    private Button btnLogout;
+
+    private SQLiteHandler db;
+    private SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-/*
-        FirstName = (EditText) findViewById(R.id.First_Name);
-        LastName = (EditText)findViewById((R.id.Last_Name));
-        Email = (EditText)findViewById(R.id.Email);
-        UserName = (EditText)findViewById(R.id.Username);
-*/
-        ButtonLogin = (Button) findViewById(R.id.ButtonLogin);
-        ButtonLogin.setOnClickListener(this);
+        setContentView(R.layout.activity_main);
 
-    }
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        txtName = (TextView) findViewById(R.id.name);
+        txtEmail = (TextView) findViewById(R.id.email);
+        btnLogout = (Button) findViewById(R.id.btnLogout);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.profile) {
-            startActivity(new Intent(this, Profile.class));
-            return true;
+        // SqLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
+        // session manager
+        session = new SessionManager(getApplicationContext());
+
+        if (!session.isLoggedIn()) {
+            logoutUser();
         }
 
-        return super.onOptionsItemSelected(item);
+        // Fetching user details from SQLite
+        HashMap<String, String> user = db.getUserDetails();
+
+        String name = user.get("name");
+        String email = user.get("email");
+
+        // Displaying the user details on the screen
+        txtName.setText(name);
+        txtEmail.setText(email);
+
+        // Logout button click event
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                logoutUser();
+            }
+        });
     }
 
-*/
-    @Override
-    public void onClick(View v){
-        switch (v.getId()){
-            case R.id.ButtonLogin:
-                startActivity(new Intent(this, LoginMain.class));
-                break;
-        }
+    /**
+     * Logging out the user. Will set isLoggedIn flag to false in shared
+     * preferences Clears the user data from sqlite users table
+     * */
+    private void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+
+        // Launching the login activity
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
