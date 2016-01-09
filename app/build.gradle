@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.ebuspass.ebuspassapp"
-        minSdkVersion 8
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -25,4 +25,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.braintreepayments.api:braintree:2.+'
+    compile 'com.braintreepayments.api:drop-in:2.+'
+    compile 'com.loopj.android:android-async-http:1.4.9'
 }

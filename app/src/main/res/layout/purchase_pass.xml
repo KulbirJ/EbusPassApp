@@ -19,7 +19,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="10 Rides - $24.50"
+            android:text="10 Rides"
             android:layout_gravity="center_horizontal"
             android:id="@+id/PerRideRadioButton"
             android:checked="false" />
@@ -37,28 +37,50 @@
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/PerRideRadioGroup">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Youth - $22.00"
+            android:id="@+id/PerRideYouth"
+            android:layout_gravity="center_horizontal"
+            android:singleLine="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adult - $27.00"
+            android:id="@+id/PerRideAdult"
+            android:layout_gravity="center_horizontal" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:id="@+id/MonthlyPassRadioGroup">
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Youth - $55.00"
-            android:id="@+id/YouthRadioButton"
+            android:text="Youth - $60.00"
+            android:id="@+id/MonthlyYouth"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post Secondary - $65.00"
-            android:id="@+id/PostSecondaryRadioButton"
+            android:text="Post Secondary - $72.00"
+            android:id="@+id/MonthlyPostSecondary"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Adult - $75.00"
-            android:id="@+id/AdultRadioButton"
+            android:text="Adult - $84.00"
+            android:id="@+id/MonthlyAdult"
             android:checked="false" />
     </RadioGroup>
 
@@ -73,33 +95,19 @@
         android:textAlignment="center"
         />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Total:"
-            android:id="@+id/CostLabel"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="$0.00"
-            android:id="@+id/Cost" />
-    </LinearLayout>
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Purchase"
+        android:text="Checkout"
         android:id="@+id/ButtonPurchase"
+        android:onClick="onBraintreeSubmit"
         android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ErrorText"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#FF0000" />
 
 </LinearLayout>
