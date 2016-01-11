@@ -12,13 +12,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.ebuspass.ebuspassapp.WebRequest;
-
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import com.braintreepayments.api.*;
-import com.braintreepayments.cardform.*;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 
@@ -39,8 +37,12 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
     RadioButton PerRideRadioButton, MonthlyRadioButton, MonthlyAdultButton, MonthlyYouthButton, MonthlyPostSecondaryButton,
                 PerRideAdultButton, PerRideYouthButton;
     EditText PassQuantity;
-    String clientToken;
     TextView ErrorText;
+
+    String amount;
+    String quantity;
+    String passType;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceSate){
@@ -54,10 +56,12 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
                 try {
-                    clientToken = new String(responseBody, "UTF-8");
+                    setToken(new String(responseBody, "UTF-8"));
+                    Log.d("getToken", getToken());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                    this.clientToken = null;
+                    setToken(null);
+                    Log.d("getToken", getToken());
                 }
                 Log.v("Client Token", clientToken);
             }
@@ -65,7 +69,7 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                this.clientToken = null;
+                setToken(null);
                 Log.v("Client Token", clientToken);
             }
         });
@@ -102,9 +106,7 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
         switch (v.getId()){
             case R.id.ButtonPurchase:
 
-                String amount, passType, quantity;
-
-                quantity = PassQuantity.getText().toString();
+                setQuantity(PassQuantity.getText().toString());
 
                 if(PassQuantity.getText().toString().length() == 0) {
                     displayError("You must enter a valid quantity");
@@ -113,25 +115,25 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
 
                 if(MonthlyRadioButton.isChecked()) {
                     if (MonthlyAdultButton.isChecked()) {
-                        passType = "Monthly - Adult";
-                        amount = Integer.toString(Integer.parseInt(quantity) * MONTHLY_ADULT_COST);
+                        setPassType("Monthly - Adult");
+                        setAmount(Integer.toString(Integer.parseInt(quantity) * MONTHLY_ADULT_COST));
                     } else if(MonthlyPostSecondaryButton.isChecked()) {
-                        passType = "Monthly - Post Secondary";
-                        amount = Integer.toString(Integer.parseInt(quantity) * MONTHLY_POST_SECONDARY_COST);
+                        setPassType("Monthly - Post Secondary");
+                        setAmount(Integer.toString(Integer.parseInt(quantity) * MONTHLY_POST_SECONDARY_COST));
                     } else if(MonthlyYouthButton.isChecked()) {
-                        passType = "Monthly - Youth";
-                        amount = Integer.toString(Integer.parseInt(quantity) * MONTHLY_YOUTH_COST);
+                        setPassType("Monthly - Youth");
+                        setAmount(Integer.toString(Integer.parseInt(quantity) * MONTHLY_YOUTH_COST));
                     } else {
                         displayError("You must select a pass type");
                         return;
                     }
                 } else if(PerRideRadioButton.isChecked()) {
                     if (PerRideAdultButton.isChecked()) {
-                        passType = "10 Rides - Adult";
-                        amount = Integer.toString(Integer.parseInt(quantity) * PER_RIDE_ADULT_COST);
+                        setPassType("10 Rides - Adult");
+                        setAmount(Integer.toString(Integer.parseInt(quantity) * PER_RIDE_ADULT_COST));
                     } else if(PerRideYouthButton.isChecked()) {
-                        passType = "10 Rides - Youth";
-                        amount = Integer.toString(Integer.parseInt(quantity) * PER_RIDE_YOUTH_COST);
+                        setPassType("10 Rides - Youth");
+                        setAmount(Integer.toString(Integer.parseInt(quantity) * PER_RIDE_YOUTH_COST));
                     } else {
                         displayError("You must select a pass type");
                         return;
@@ -141,9 +143,9 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
                     return;
                 }
 
-                amount += ".00";
+                setAmount(getAmount() + ".00");
 
-                onBraintreeSubmit(v, amount, passType, quantity);
+                onBraintreeSubmit(v);
                 break;
             case R.id.MonthlyRadioButton:
                 MonthlyPassRadioGroup.setVisibility(View.VISIBLE);
@@ -156,12 +158,12 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    public void onBraintreeSubmit(View v, String amount, String passType, String quantity) {
+    public void onBraintreeSubmit(View v) {
         PaymentRequest paymentRequest = new PaymentRequest()
-                .clientToken("eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiJiNjQ3ODMxNzZjMzEyNzdlZTFiMWE2Yjg1MmU3NjNkNTE4M2QxOWI1MjVkOTJjNDMzNzQ3ZDExY2ZkODM1ZmJhfGNyZWF0ZWRfYXQ9MjAxNi0wMS0wOFQwMDozNjoyNy4zMzM1NjgxMjUrMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzM0OHBrOWNnZjNiZ3l3MmIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIn0sInRocmVlRFNlY3VyZUVuYWJsZWQiOnRydWUsInRocmVlRFNlY3VyZSI6eyJsb29rdXBVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi90aHJlZV9kX3NlY3VyZS9sb29rdXAifSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlLCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=")
-                .primaryDescription(passType)
-                .secondaryDescription(quantity)
-                .amount(amount);
+                .clientToken(getToken())
+                .primaryDescription(getPassType())
+                .secondaryDescription(getQuantity())
+                .amount(getAmount());
         startActivityForResult(paymentRequest.getIntent(this), 1);
     }
 
@@ -174,8 +176,39 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
                         BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
                 );
                 String nonce = paymentMethodNonce.getNonce();
-                Log.v("Nonce", nonce);
+                RequestParams params = new RequestParams();
+                params.put("nonce", nonce);
+                params.put("pass_type", getPassType());
+                params.put("amount", getAmount());
+                params.put("quantity", getQuantity());
+
+                Log.d("onActivityResult", "Pass Type: " + getPassType());
+                Log.d("onActivityResult","RequestParam set up, sending Nonce to server");
+
+                WebRequest.sendNonce(params, new AsyncHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        try {
+                            Log.d("sendNonce", new String(responseBody, "UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            Log.d("sendNonce", "UnsupportedEncodingExeption");
+                        }
+
+                        displayError("Successfully sent nonce");
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        Log.d("sendNonce", "Failure");
+                        displayError("Transaction could not be completed. Please try again.");
+                    }
+                });
                 // Send the nonce to your server.
+                Log.d("onActivityResult", "Returned from sending Nonce");
             }
         }
     }
@@ -183,4 +216,37 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
     protected void displayError(String error) {
         ErrorText.setText(error);
     }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getPassType() {
+        return passType;
+    }
+
+    public void setPassType(String passType) {
+        this.passType = passType;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
 }
