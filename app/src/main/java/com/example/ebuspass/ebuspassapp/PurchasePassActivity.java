@@ -34,8 +34,8 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
 
     Button CheckoutButton;
     RadioGroup PassTypeRadioGroup, MonthlyPassRadioGroup, PerRideRadioGroup;
-    RadioButton PerRideRadioButton, MonthlyRadioButton, MonthlyAdultButton, MonthlyYouthButton, MonthlyPostSecondaryButton,
-                PerRideAdultButton, PerRideYouthButton;
+    RadioButton PerRideRadioButton, MonthlyRadioButton, MonthlyAdultButton, MonthlyYouthButton,
+                MonthlyPostSecondaryButton, PerRideAdultButton, PerRideYouthButton;
     EditText PassQuantity;
     TextView ErrorText;
 
@@ -48,31 +48,6 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceSate){
         super.onCreate(savedInstanceSate);
         setContentView(R.layout.purchase_pass);
-
-        WebRequest.getToken(new AsyncHttpResponseHandler() {
-            String clientToken = "";
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                try {
-                    setToken(new String(responseBody, "UTF-8"));
-                    Log.d("getToken", getToken());
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    setToken(null);
-                    Log.d("getToken", getToken());
-                }
-                Log.v("Client Token", clientToken);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                setToken(null);
-                Log.v("Client Token", clientToken);
-            }
-        });
 
         CheckoutButton = (Button) findViewById(R.id.ButtonPurchase);
 
@@ -99,6 +74,30 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
 
         MonthlyPassRadioGroup.setVisibility(View.GONE);
         PerRideRadioGroup.setVisibility(View.GONE);
+
+        //Obtain token from Django server
+        WebRequest.getToken(new AsyncHttpResponseHandler() {
+            String clientToken = "";
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                try {
+                    setToken(new String(responseBody, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    setToken(null);
+                }
+                Log.v("Client Token", clientToken);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                setToken(null);
+                Log.v("Client Token", clientToken);
+            }
+        });
     }
 
     @Override
@@ -169,12 +168,14 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v("onActivity", "Entering onActivityResult");
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 PaymentMethodNonce paymentMethodNonce = data.getParcelableExtra(
                         BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
                 );
+
+                displayMessage("Processing purchase...");
+
                 String nonce = paymentMethodNonce.getNonce();
                 RequestParams params = new RequestParams();
                 params.put("nonce", nonce);
@@ -182,39 +183,48 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
                 params.put("amount", getAmount());
                 params.put("quantity", getQuantity());
 
-                Log.d("onActivityResult", "Pass Type: " + getPassType());
-                Log.d("onActivityResult","RequestParam set up, sending Nonce to server");
-
                 WebRequest.sendNonce(params, new AsyncHttpResponseHandler() {
-
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                        String response = "";
+
                         try {
-                            Log.d("sendNonce", new String(responseBody, "UTF-8"));
+                            response = new String(responseBody, "UTF-8");
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
-                            Log.d("sendNonce", "UnsupportedEncodingExeption");
+                            displayError("An error occurred during transmission");
+                            return;
                         }
 
-                        displayError("Successfully sent nonce");
+                        if (response.equalsIgnoreCase("Success")) {
+                            Intent intent = new Intent(PurchasePassActivity.this, LoginMain.class);
+                            startActivity(intent);
+                            finish();
+                        } else if (response.equalsIgnoreCase("Purchase Failed")) {
+                            displayError("The transaction could not be completed.");
+                        } else {
+                            displayError("An error occurred during transmission. Please try again.");
+                        }
 
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                         // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                        Log.d("sendNonce", "Failure");
                         displayError("Transaction could not be completed. Please try again.");
                     }
                 });
-                // Send the nonce to your server.
-                Log.d("onActivityResult", "Returned from sending Nonce");
             }
         }
     }
 
     protected void displayError(String error) {
         ErrorText.setText(error);
+    }
+
+    protected void displayMessage(String message) {
+        ErrorText.setText(message);
     }
 
     public String getAmount() {
