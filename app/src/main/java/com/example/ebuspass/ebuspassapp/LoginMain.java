@@ -28,16 +28,15 @@ import cz.msebera.android.httpclient.Header;
  * Created by Kulbir on 2015-12-20.
  */
 public class LoginMain extends ActionBarActivity {
-<<<<<<< HEAD
     Button purchase;
     private SQLiteHandler db;
     private SessionManager session;
-=======
+
 
     private String ridesRemaining, monthlyPass;
 
 
->>>>>>> origin/master
+
     @Override
     protected  void onCreate(Bundle savedInstanceState)
     {
@@ -144,7 +143,7 @@ public class LoginMain extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-<<<<<<< HEAD
+
     private void logoutUser() {
         session.setLogin(false);
 
@@ -156,6 +155,4 @@ public class LoginMain extends ActionBarActivity {
         finish();
     }
 
-=======
->>>>>>> origin/master
 }
