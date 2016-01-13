@@ -5,17 +5,33 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 
 /**
  * Created by Kulbir on 2015-12-20.
  */
 public class LoginMain extends ActionBarActivity {
-
+    Button purchase;
+    private SQLiteHandler db;
+    private SessionManager session;
     @Override
     protected  void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+       purchase = (Button)findViewById(R.id.button3);
+        purchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginMain.this, PurchasePassActivity.class));
+
+            }
+        }); 
+
 
     }
     @Override
@@ -36,8 +52,27 @@ public class LoginMain extends ActionBarActivity {
             startActivity(new Intent(this, MainActivity.class));
             return true;
         }
+        else if (id == R.id.purchase_history) {
+            startActivity(new Intent(this, PurchasePassActivity.class));
+            return true;
+        }
+        else if (id == R.id.logout)
+        {
+            logoutUser();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+
+        // Launching the login activity
+        Intent intent = new Intent(LoginMain.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }
