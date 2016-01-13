@@ -39,10 +39,7 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
     EditText PassQuantity;
     TextView ErrorText;
 
-    String amount;
-    String quantity;
-    String passType;
-    String token;
+    String amount, quantity, passType, token;
 
     @Override
     protected void onCreate(Bundle savedInstanceSate){
@@ -88,14 +85,14 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
                     e.printStackTrace();
                     setToken(null);
                 }
-                Log.v("Client Token", clientToken);
+                Log.d("Client Token", clientToken);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 setToken(null);
-                Log.v("Client Token", clientToken);
+                Log.d("Client Token", clientToken);
             }
         });
     }

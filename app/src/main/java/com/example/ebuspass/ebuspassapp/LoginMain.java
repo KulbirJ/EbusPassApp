@@ -3,13 +3,29 @@ package com.example.ebuspass.ebuspassapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Kulbir on 2015-12-20.
  */
 public class LoginMain extends ActionBarActivity {
+
+    private String ridesRemaining, monthlyPass;
+
 
     @Override
     protected  void onCreate(Bundle savedInstanceState)
@@ -17,12 +33,72 @@ public class LoginMain extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
 
+        SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
+        HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+
+        String email = "hanna25s@uregina.ca";
+        String dateJoined = "2015-11-06 01:53:25";
+
+        //No pass test info
+        //String email = "gufan_chan@yahoo.com";
+        //String dateJoined = "2016-01-06 21:46:21";
+
+        RequestParams params = new RequestParams();
+        params.put("email", email);
+        params.put("date_joined", dateJoined);
+
+        WebRequest.getPassInformation(params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                String response = "";
+                JSONObject jObj = null;
+
+                try {
+                    response = new String(responseBody, "UTF-8");
+
+                    if(response.equalsIgnoreCase("No Pass")) {
+                        Log.d("getPasInformation", "No Pass");
+                    } else if(response.equalsIgnoreCase("Invalid User")) {
+                        Log.d("getPassInformation", "Invalid User");
+                    } else {
+
+                        jObj = new JSONObject(response);
+                        String ridesRemaining = jObj.getString("rides");
+                        String expiryDate = jObj.getString("monthly");
+
+                        Log.d("getPassInformation", response);
+                        Log.d("monthly", expiryDate);
+                        Log.d("rides", ridesRemaining);
+
+                    }
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d("getPassInformation","Failure");
+            }
+        });
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+
+
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -39,5 +115,4 @@ public class LoginMain extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
