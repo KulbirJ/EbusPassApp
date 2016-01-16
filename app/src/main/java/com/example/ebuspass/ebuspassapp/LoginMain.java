@@ -42,6 +42,20 @@ public class LoginMain extends ActionBarActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+
+        // SqLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
+        // session manager
+        session = new SessionManager(getApplicationContext());
+
+        if (!session.isLoggedIn()) {
+            logoutUser();
+        }
+
+
+
+
        purchase = (Button)findViewById(R.id.button3);
         purchase.setOnClickListener(new View.OnClickListener() {
             @Override
