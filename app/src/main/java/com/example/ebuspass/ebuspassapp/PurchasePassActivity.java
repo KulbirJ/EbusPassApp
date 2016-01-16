@@ -15,10 +15,12 @@ import android.widget.TextView;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import com.braintreepayments.api.*;
+import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -39,7 +41,12 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
     EditText PassQuantity;
     TextView ErrorText;
 
-    String amount, quantity, passType, token;
+    String amount;
+    String quantity;
+    String passType;
+    String token;
+    String email;
+    String dateJoined;
 
     @Override
     protected void onCreate(Bundle savedInstanceSate){
@@ -72,27 +79,33 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
         MonthlyPassRadioGroup.setVisibility(View.GONE);
         PerRideRadioGroup.setVisibility(View.GONE);
 
+        SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
+        HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+
+        setEmail("hanna25s@uregina.ca");
+        setDateJoined("2015-11-06 01:53:25");
+
         //Obtain token from Django server
         WebRequest.getToken(new AsyncHttpResponseHandler() {
-            String clientToken = "";
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
                 try {
                     setToken(new String(responseBody, "UTF-8"));
+                    Log.d("Client Token", getToken());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     setToken(null);
+                    Log.d("Client Token", getToken());
                 }
-                Log.d("Client Token", clientToken);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 setToken(null);
-                Log.d("Client Token", clientToken);
+                Log.d("Client Token", getToken());
             }
         });
     }
@@ -179,39 +192,42 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
                 params.put("pass_type", getPassType());
                 params.put("amount", getAmount());
                 params.put("quantity", getQuantity());
+                params.put("email", getEmail());
+                params.put("date_joined",getDateJoined());
 
-                WebRequest.sendNonce(params, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        WebRequest.sendNonce(params, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                        String response = "";
+                                String response = "";
 
-                        try {
-                            response = new String(responseBody, "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                            displayError("An error occurred during transmission");
-                            return;
-                        }
+                                try {
+                                    response = new String(responseBody, "UTF-8");
+                                    Log.d("sendNonceReturn",response);
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                    displayError("An error occurred during transmission");
+                                    return;
+                                }
 
-                        if (response.equalsIgnoreCase("Success")) {
-                            Intent intent = new Intent(PurchasePassActivity.this, LoginMain.class);
-                            startActivity(intent);
-                            finish();
-                        } else if (response.equalsIgnoreCase("Purchase Failed")) {
-                            displayError("The transaction could not be completed.");
-                        } else {
-                            displayError("An error occurred during transmission. Please try again.");
-                        }
+                                if (response.equalsIgnoreCase("Success")) {
+                                    Intent intent = new Intent(PurchasePassActivity.this, LoginMain.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else if (response.equalsIgnoreCase("Purchase Failed")) {
+                                    displayError("The transaction could not be completed.");
+                                } else {
+                                    displayError("An error occurred during transmission. Please try again.");
+                                }
 
-                    }
+                            }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                        displayError("Transaction could not be completed. Please try again.");
-                    }
-                });
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                                displayError("Transaction could not be completed. Please try again.");
+                            }
+                        });
             }
         }
     }
@@ -254,6 +270,22 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getDateJoined() {
+        return dateJoined;
+    }
+
+    public void setDateJoined(String date_joined) {
+        this.dateJoined = date_joined;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }
