@@ -44,11 +44,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pass Expires on yyyy/mm/dd"
-        android:id="@+id/textView"
+        android:text="Pass Expires On:"
+        android:id="@+id/MonthlyText"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="34dp" />
+        android:layout_marginBottom="34dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/RidesRemainingText"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
+        android:text="DD/MM/YYYY" />
 
 
 </RelativeLayout>
