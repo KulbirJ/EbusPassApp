@@ -16,18 +16,29 @@
         android:paddingRight="20dp" >
 
         <EditText
-            android:id="@+id/name"
+            android:id="@+id/firstname"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:background="@color/input_register_bg"
-            android:hint="@string/hint_name"
+            android:hint="First Name"
             android:padding="10dp"
             android:singleLine="true"
             android:inputType="textCapWords"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
-
+        <EditText
+            android:id="@+id/lastname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/input_register_bg"
+            android:hint="Last Name"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:inputType="textCapWords"
+            android:textColor="@color/input_register"
+            android:textColorHint="@color/input_register_hint" />
         <EditText
             android:id="@+id/email"
             android:layout_width="fill_parent"
@@ -40,6 +51,18 @@
             android:singleLine="true"
             android:textColor="@color/input_register"
             android:textColorHint="@color/input_register_hint" />
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/input_register_bg"
+            android:hint="Username"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:inputType="textCapWords"
+            android:textColor="@color/input_register"
+            android:textColorHint="@color/input_register_hint" />
 
         <EditText
             android:id="@+id/password"
@@ -48,6 +71,18 @@
             android:layout_marginBottom="10dp"
             android:background="@color/input_register_bg"
             android:hint="@string/hint_password"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/input_register"
+            android:textColorHint="@color/input_register_hint" />
+        <EditText
+            android:id="@+id/confirmpassword"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/input_register_bg"
+            android:hint="Re-Enter Password"
             android:inputType="textPassword"
             android:padding="10dp"
             android:singleLine="true"
