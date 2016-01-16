@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
 import com.example.ebuspass.ebuspassapp.helper.SessionManager;
@@ -31,6 +32,7 @@ public class LoginMain extends ActionBarActivity {
     Button purchase;
     private SQLiteHandler db;
     private SessionManager session;
+    TextView monthlyText, ridesRemainingText;
 
 
     private String ridesRemaining, monthlyPass;
@@ -53,18 +55,17 @@ public class LoginMain extends ActionBarActivity {
             logoutUser();
         }
 
+        monthlyText = (TextView) findViewById(R.id.MonthlyText);
+        ridesRemainingText = (TextView) findViewById(R.id.RidesRemainingText);
 
-
-
-       purchase = (Button)findViewById(R.id.button3);
+        purchase = (Button)findViewById(R.id.button3);
         purchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginMain.this, PurchasePassActivity.class));
 
             }
-        }); 
-
+        });
 
         SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
         HashMap<String, String> userInfo = sqlHandler.getUserDetails();
@@ -103,6 +104,9 @@ public class LoginMain extends ActionBarActivity {
                         Log.d("getPassInformation", response);
                         Log.d("monthly", expiryDate);
                         Log.d("rides", ridesRemaining);
+
+                        monthlyText.setText("Expires On: " + expiryDate);
+                        ridesRemainingText.setText(ridesRemaining + " Rides Remaining");
 
                     }
 
