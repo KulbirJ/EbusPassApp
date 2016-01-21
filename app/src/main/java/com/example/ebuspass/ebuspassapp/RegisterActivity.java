@@ -118,7 +118,7 @@ public class RegisterActivity extends Activity {
      * Function to store user in MySQL database will post params(tag, name,
      * email, password) to register url
      * */
-    private void registerUser(final String fname, final String lname, final String email, final String uname,
+    private void registerUser(final String first_name, final String last_name, final String email, final String username,
                               final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
@@ -143,15 +143,15 @@ public class RegisterActivity extends Activity {
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
-                        String fname = user.getString("fname");
-                        String lname = user.getString("lname");
+                        String first_name = user.getString("first_name");
+                        String last_name = user.getString("last_name");
                         String email = user.getString("email");
-                        String uname = user.getString("uname");
-                        String created_at = user
-                                .getString("created_at");
+                        String username = user.getString("username");
+                        String date_joined = user
+                                .getString("date_joined");
 
                         // Inserting row in users table
-                        db.addUser(fname, lname, email, uid, uname, created_at);
+                        db.addUser(first_name, last_name, email, uid, username, date_joined);
 
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
@@ -189,10 +189,10 @@ public class RegisterActivity extends Activity {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("fname", fname);
-                params.put("lname", lname);
+                params.put("first_name", first_name);
+                params.put("last_name", last_name);
                 params.put("email", email);
-                params.put("uname", uname);
+                params.put("username", username);
                 params.put("password", password);
 
                 return params;

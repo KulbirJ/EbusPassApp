@@ -29,7 +29,7 @@ public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private Button btnLogin;
     private Button btnLinkToRegister;
-    private EditText inputEmail;
+    private EditText inputusername;
     private EditText inputPassword;
     private ProgressDialog pDialog;
     private SessionManager session;
@@ -40,7 +40,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        inputEmail = (EditText) findViewById(R.id.email);
+        inputusername = (EditText) findViewById(R.id.uname);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
@@ -67,13 +67,13 @@ public class LoginActivity extends Activity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                String email = inputEmail.getText().toString().trim();
+                String user_name = inputusername.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
                 // Check for empty data in the form
-                if (!email.isEmpty() && !password.isEmpty()) {
+                if (!user_name.isEmpty() && !password.isEmpty()) {
                     // login user
-                    checkLogin(email, password);
+                    checkLogin(user_name, password);
                 } else {
                     // Prompt user to enter credentials
                     Toast.makeText(getApplicationContext(),
@@ -100,7 +100,7 @@ public class LoginActivity extends Activity {
     /**
      * function to verify login details in mysql db
      * */
-    private void checkLogin(final String email, final String password) {
+    private void checkLogin(final String Username, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
@@ -129,12 +129,11 @@ public class LoginActivity extends Activity {
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
-                        String fname = user.getString("fname");
-                        String lname = user.getString("lname");
+                        String fname = user.getString("first_name");
+                        String lname = user.getString("last_name");
                         String email = user.getString("email");
-                        String uname = user.getString("uname");
-                        String created_at = user
-                                .getString("created_at");
+                        String uname = user.getString("username");
+                        String created_at = user.getString("date_joined");
 
                         // Inserting row in users table
                         db.addUser(fname,lname, email, uid,uname, created_at);
@@ -172,7 +171,7 @@ public class LoginActivity extends Activity {
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("email", email);
+                params.put("username", Username);
                 params.put("password", password);
 
                 return params;
