@@ -50,7 +50,8 @@ public class LoginMain extends ActionBarActivity {
 
         // session manager
         session = new SessionManager(getApplicationContext());
-
+        SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
+        HashMap<String, String> userInfo = sqlHandler.getUserDetails();
         if (!session.isLoggedIn()) {
             logoutUser();
         }
@@ -67,8 +68,7 @@ public class LoginMain extends ActionBarActivity {
             }
         });
 
-        SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
-        HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+
 
         String email = "hanna25s@uregina.ca";
         String dateJoined = "2015-11-06 01:53:25";
