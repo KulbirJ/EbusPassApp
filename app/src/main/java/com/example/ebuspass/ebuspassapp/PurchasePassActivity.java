@@ -82,8 +82,8 @@ public class PurchasePassActivity extends AppCompatActivity implements View.OnCl
         SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
         HashMap<String, String> userInfo = sqlHandler.getUserDetails();
 
-        setEmail("hanna25s@uregina.ca");
-        setDateJoined("2015-11-06 01:53:25");
+        setEmail(userInfo.get("email"));
+        setDateJoined(userInfo.get("date_joined"));
 
         //Obtain token from Django server
         WebRequest.getToken(new AsyncHttpResponseHandler() {

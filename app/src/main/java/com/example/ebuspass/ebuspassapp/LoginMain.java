@@ -68,14 +68,8 @@ public class LoginMain extends ActionBarActivity {
             }
         });
 
-
-
-        String email = "hanna25s@uregina.ca";
-        String dateJoined = "2015-11-06 01:53:25";
-
-        //No pass test info
-        //String email = "gufan_chan@yahoo.com";
-        //String dateJoined = "2016-01-06 21:46:21";
+        String email = userInfo.get("email");
+        String dateJoined = userInfo.get("date_joined");
 
         RequestParams params = new RequestParams();
         params.put("email", email);
@@ -93,8 +87,12 @@ public class LoginMain extends ActionBarActivity {
 
                     if(response.equalsIgnoreCase("No Pass")) {
                         Log.d("getPasInformation", "No Pass");
+                        monthlyText.setText("");
+                        ridesRemainingText.setText("You do not have a pass");
                     } else if(response.equalsIgnoreCase("Invalid User")) {
                         Log.d("getPassInformation", "Invalid User");
+                        monthlyText.setText("There was an error grabbing your pass");
+                        ridesRemainingText.setText("Please try logging in again");
                     } else {
 
                         jObj = new JSONObject(response);
