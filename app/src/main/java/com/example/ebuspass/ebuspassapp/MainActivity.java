@@ -1,23 +1,29 @@
 package com.example.ebuspass.ebuspassapp;
 import android.app.Activity;
 import android.content.Intent;
+
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.ReaderCallback;
+import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+import com.example.ebuspass.ebuspassapp.IsoDepTransceiver.OnMessageReceived;
 import java.util.HashMap;
 
 
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
 import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnMessageReceived, ReaderCallback {
 
     private TextView txtName;
     private TextView txtEmail;
     private Button btnLogout;
-
+    private NfcAdapter nfcAdapter;
+    private IsoDepAdapter isoDepAdapter;
     private SQLiteHandler db;
     private SessionManager session;
 
@@ -29,7 +35,9 @@ public class MainActivity extends Activity {
         txtName = (TextView) findViewById(R.id.name);
         txtEmail = (TextView) findViewById(R.id.email);
         btnLogout = (Button) findViewById(R.id.btnLogout);
-
+        isoDepAdapter = new IsoDepAdapter(getLayoutInflater());
+       // listView.setAdapter(isoDepAdapter);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -73,5 +81,41 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcAdapter.enableReaderMode(this, this, NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+                null);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcAdapter.disableReaderMode(this);
+    }
+
+    @Override
+    public void onTagDiscovered(Tag tag) {
+        IsoDep isoDep = IsoDep.get(tag);
+        IsoDepTransceiver transceiver = new IsoDepTransceiver(isoDep, this);
+        Thread thread = new Thread(transceiver);
+        thread.start();
+    }
+
+    @Override
+    public void onMessage(final byte[] message) {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                isoDepAdapter.addMessage(new String(message));
+            }
+        });
+    }
+
+    @Override
+    public void onError(Exception exception) {
+        onMessage(exception.getMessage().getBytes());
     }
 }
