@@ -1,4 +1,4 @@
-package com.example.ebuspass.ebuspassapp;
+package com.example.ebuspass.ebuspassapp.helper;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -9,7 +9,7 @@ import com.loopj.android.http.RequestParams;
  */
 public final class WebRequest {
 
-    static String websiteUrl = "http://54.84.253.83";
+    static String websiteUrl = "http://www.ebuspass.com";
 
     private static AsyncHttpClient mClient = new AsyncHttpClient();
 

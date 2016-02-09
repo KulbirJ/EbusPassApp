@@ -16,6 +16,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -30,10 +32,14 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 public class purchase_history extends Activity {
 
     TextView resultView;
     TableLayout resultTable;
+    public String useremail;
+    public String userdateJoined;
 
     private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
     private final int FP = ViewGroup.LayoutParams.FILL_PARENT;
@@ -50,16 +56,22 @@ public class purchase_history extends Activity {
     }
 
     public void getData() {
+        SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
+        HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+
+        String useremail = userInfo.get("email");
+        String userdateJoined = userInfo.get("date_joined");
+        
         String result = "";
         InputStream isr = null;
         ArrayList<BasicNameValuePair> dataToSend = new ArrayList<>();
-        dataToSend.add(new BasicNameValuePair("email","hanna25s@uregina.ca"));
-        dataToSend.add(new BasicNameValuePair("date_joined","2015-11-06 01:53:25"));
+        dataToSend.add(new BasicNameValuePair("email",useremail));
+        dataToSend.add(new BasicNameValuePair("date_joined",userdateJoined));
 
         try {
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://54.84.253.83/hooks/Transactions.php");
+            HttpPost httppost = new HttpPost("http://www.ebuspass.com/hooks/Transactions.php");
             System.out.println(dataToSend);
             httppost.setEntity(new UrlEncodedFormEntity(dataToSend));
 
