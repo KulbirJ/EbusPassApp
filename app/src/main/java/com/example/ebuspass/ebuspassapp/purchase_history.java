@@ -34,6 +34,8 @@ public class purchase_history extends Activity {
 
     TextView resultView;
     TableLayout resultTable;
+    public String useremail;
+    public String userdateJoined;
 
     private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
     private final int FP = ViewGroup.LayoutParams.FILL_PARENT;
@@ -50,11 +52,17 @@ public class purchase_history extends Activity {
     }
 
     public void getData() {
+        SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
+        HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+
+        String useremail = userInfo.get("email");
+        String userdateJoined = userInfo.get("date_joined");
+        
         String result = "";
         InputStream isr = null;
         ArrayList<BasicNameValuePair> dataToSend = new ArrayList<>();
-        dataToSend.add(new BasicNameValuePair("email","hanna25s@uregina.ca"));
-        dataToSend.add(new BasicNameValuePair("date_joined","2015-11-06 01:53:25"));
+        dataToSend.add(new BasicNameValuePair("email",useremail));
+        dataToSend.add(new BasicNameValuePair("date_joined",userdateJoined));
 
         try {
 
