@@ -148,7 +148,7 @@ public class LoginMain extends ActionBarActivity {
             return true;
         }
         else if (id == R.id.purchase_history) {
-            startActivity(new Intent(this, PurchasePassActivity.class));
+            startActivity(new Intent(this, purchase_history.class));
             return true;
         }
         else if (id == R.id.logout)
