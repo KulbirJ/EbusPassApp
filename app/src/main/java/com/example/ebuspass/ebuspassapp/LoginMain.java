@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
 import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 
-import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.example.ebuspass.ebuspassapp.helper.WebRequest;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -85,11 +85,11 @@ public class LoginMain extends ActionBarActivity {
                 try {
                     response = new String(responseBody, "UTF-8");
 
-                    if(response.equalsIgnoreCase("No Pass")) {
+                    if (response.equalsIgnoreCase("No Pass")) {
                         Log.d("getPasInformation", "No Pass");
                         monthlyText.setText("");
                         ridesRemainingText.setText("You do not have a pass");
-                    } else if(response.equalsIgnoreCase("Invalid User")) {
+                    } else if (response.equalsIgnoreCase("Invalid User")) {
                         Log.d("getPassInformation", "Invalid User");
                         monthlyText.setText("There was an error grabbing your pass");
                         ridesRemainingText.setText("Please try logging in again");
@@ -120,7 +120,7 @@ public class LoginMain extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d("getPassInformation","Failure");
+                Log.d("getPassInformation", "Failure");
             }
         });
 
