@@ -16,6 +16,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -30,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 public class purchase_history extends Activity {
 
     TextView resultView;
@@ -67,7 +71,7 @@ public class purchase_history extends Activity {
         try {
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://54.84.253.83/hooks/Transactions.php");
+            HttpPost httppost = new HttpPost("http://www.ebuspass.com/hooks/Transactions.php");
             System.out.println(dataToSend);
             httppost.setEntity(new UrlEncodedFormEntity(dataToSend));
 
