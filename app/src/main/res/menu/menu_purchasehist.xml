@@ -1,10 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".UserInfo">
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".PurchaseHistory">
 
-    <item android:id="@+id/logout"
-        android:title="Logout"
-        app:showAsAction="always"/>
+
 
     <item android:id="@+id/loginmain"
         android:title="Home" />
@@ -12,6 +10,5 @@
     <item android:id="@+id/purchase_pass"
         android:title="Purchase Pass" />
 
-    <item android:id="@+id/purchase_history"
-        android:title="Purchase History" />
+
 </menu>

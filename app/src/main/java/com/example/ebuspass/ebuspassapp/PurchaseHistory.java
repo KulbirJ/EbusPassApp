@@ -5,9 +5,11 @@ package com.example.ebuspass.ebuspassapp;
  */
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +36,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class purchase_history extends Activity {
+public class PurchaseHistory extends ActionBarActivity {
 
     TextView resultView;
     TableLayout resultTable;
@@ -188,19 +190,29 @@ public class purchase_history extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-// Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_purchasehist, menu);
         return true;
-    }
 
+
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-// Handle action bar item clicks here. The action bar will
-// automatically handle clicks on the Home/Up button, so long
-// as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-//noinspection SimplifiableIfStatement
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.loginmain) {
+            startActivity(new Intent(this, LoginMain.class));
+            return true;
+        }
+        else if (id == R.id.purchase_pass) {
+            startActivity(new Intent(this, PurchasePassActivity.class));
+            return true;
+        }
 
 
         return super.onOptionsItemSelected(item);

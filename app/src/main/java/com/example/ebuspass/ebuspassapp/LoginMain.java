@@ -144,11 +144,11 @@ public class LoginMain extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.profile) {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, UserInfo.class));
             return true;
         }
         else if (id == R.id.purchase_history) {
-            startActivity(new Intent(this, purchase_history.class));
+            startActivity(new Intent(this, PurchaseHistory.class));
             return true;
         }
         else if (id == R.id.logout)
