@@ -1,5 +1,4 @@
 package com.example.ebuspass.ebuspassapp;
-import android.app.Activity;
 import android.content.Intent;
 
 import android.nfc.NfcAdapter;
@@ -143,7 +142,7 @@ public class UserInfo extends ActionBarActivity implements OnMessageReceived, Re
             return true;
         }
         else if (id == R.id.purchase_history) {
-            startActivity(new Intent(this, PurchaseHistory.class));
+            startActivity(new Intent(this, PurchaseHistoryActivity.class));
             return true;
         }
         else if (id == R.id.purchase_pass) {

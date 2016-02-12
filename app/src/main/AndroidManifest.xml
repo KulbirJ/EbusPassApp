@@ -52,7 +52,7 @@
             android:theme="@style/AppTheme.ActionBar" >
         </activity>
         <activity
-            android:name=".PurchaseHistory"
+            android:name=".PurchaseHistoryActivity"
             android:theme="@style/AppTheme.ActionBar" >
 
         </activity>

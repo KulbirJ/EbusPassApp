@@ -36,7 +36,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PurchaseHistory extends ActionBarActivity {
+public class PurchaseHistoryActivity extends ActionBarActivity {
 
     TextView resultView;
     TableLayout resultTable;
@@ -73,7 +73,7 @@ public class PurchaseHistory extends ActionBarActivity {
         try {
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://www.ebuspass.com/hooks/Transactions.php");
+            HttpPost httppost = new HttpPost("https://www.ebuspass.com/hooks/Transactions.php");
             System.out.println(dataToSend);
             httppost.setEntity(new UrlEncodedFormEntity(dataToSend));
 

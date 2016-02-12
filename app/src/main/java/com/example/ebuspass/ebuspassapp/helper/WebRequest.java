@@ -1,7 +1,5 @@
 package com.example.ebuspass.ebuspassapp.helper;
 
-import android.util.Log;
-
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -13,7 +11,7 @@ import com.loopj.android.http.RequestParams;
  */
 public final class WebRequest {
 
-    static String websiteUrl = "http://www.ebuspass.com";
+    static String websiteUrl = "https://www.ebuspass.com";
 
     private static AsyncHttpClient asyncClient = new AsyncHttpClient();
     private static SyncHttpClient syncClient = new SyncHttpClient();
@@ -31,8 +29,6 @@ public final class WebRequest {
     }
 
     public static void processBusRide(final RequestParams params, final JsonHttpResponseHandler handler) {
-
-        Log.d("processBusRide", "posting");
         handler.setUseSynchronousMode(true);
         syncClient.post(websiteUrl + "/ride_bus/", params, handler);
     }
