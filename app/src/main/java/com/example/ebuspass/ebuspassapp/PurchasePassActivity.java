@@ -3,6 +3,7 @@ package com.example.ebuspass.ebuspassapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 
-public class PurchasePassActivity extends AppCompatActivity implements View.OnClickListener {
+public class PurchasePassActivity extends ActionBarActivity implements View.OnClickListener {
 
     static final int PER_RIDE_ADULT_COST = 27;
     static final int PER_RIDE_YOUTH_COST = 22;

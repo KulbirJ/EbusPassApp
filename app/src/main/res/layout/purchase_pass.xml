@@ -8,7 +8,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.ebuspass.ebuspassapp.PurchasePassActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_floating_material_dark">
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -20,6 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="10 Rides"
+            android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
             android:id="@+id/PerRideRadioButton"
             android:checked="false" />
@@ -28,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Monthly Pass"
+            android:textColor="@color/white"
             android:id="@+id/MonthlyRadioButton"
             android:layout_gravity="center_horizontal"/>
 
@@ -44,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Youth - $22.00"
+            android:textColor="@color/white"
             android:id="@+id/PerRideYouth"
             android:layout_gravity="center_horizontal"
             android:singleLine="true" />
@@ -52,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Adult - $27.00"
+            android:textColor="@color/white"
             android:id="@+id/PerRideAdult"
             android:layout_gravity="center_horizontal" />
     </RadioGroup>
@@ -66,6 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Youth - $60.00"
+            android:textColor="@color/white"
             android:id="@+id/MonthlyYouth"
             android:checked="false" />
 
@@ -73,6 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post Secondary - $72.00"
+            android:textColor="@color/white"
             android:id="@+id/MonthlyPostSecondary"
             android:checked="false" />
 
@@ -80,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Adult - $84.00"
+            android:textColor="@color/white"
             android:id="@+id/MonthlyAdult"
             android:checked="false" />
     </RadioGroup>
@@ -92,6 +100,8 @@
         android:id="@+id/PassQuantity"
         android:layout_gravity="center_horizontal"
         android:hint="Quantity"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:textAlignment="center"
         />
 
@@ -108,6 +118,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/ErrorText"
         android:layout_gravity="center_horizontal"
-        android:textColor="#FF0000" />
+        android:textColor="@color/error_red" />
 
 </LinearLayout>
