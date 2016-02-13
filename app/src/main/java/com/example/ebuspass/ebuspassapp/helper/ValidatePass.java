@@ -18,6 +18,7 @@ public class ValidatePass extends AsyncTask<String, Void, String> {
 
     private String message;
     private String isValid;
+    private String passType;
 
     @Override
     protected String doInBackground(String... requestParams) {
@@ -38,6 +39,9 @@ public class ValidatePass extends AsyncTask<String, Void, String> {
                 try {
                     setIsValid(response.getString("isValid"));
                     setMessage(response.getString("message"));
+                    if(getIsValid().equalsIgnoreCase("true")) {
+                        setPassType(response.getString("passType"));
+                    }
                 } catch (JSONException e) {
                     setIsValid("0");
                     setMessage("Invalid Response");
@@ -53,7 +57,23 @@ public class ValidatePass extends AsyncTask<String, Void, String> {
 
         });
 
-        return getIsValid() + getMessage();
+        if(getIsValid().equalsIgnoreCase("true")) {
+            return getHeaderInfo() + getMessage();
+        } else if (getMessage() == null) {
+            return "0" + "Communication Error";
+        } else {
+            return "0" + getMessage();
+        }
+    }
+
+    public String getHeaderInfo() {
+        if (getPassType().equalsIgnoreCase("Monthly")) {
+            return "10";
+        } else if (getPassType().equalsIgnoreCase("PerRide")) {
+            return "11";
+        } else {
+            return "0";
+        }
     }
 
     public String getIsValid() {
@@ -72,4 +92,11 @@ public class ValidatePass extends AsyncTask<String, Void, String> {
             this.message = message;
     }
 
+    public String getPassType() {
+        return passType;
+    }
+
+    public void setPassType(String passType) {
+        this.passType = passType;
+    }
 }

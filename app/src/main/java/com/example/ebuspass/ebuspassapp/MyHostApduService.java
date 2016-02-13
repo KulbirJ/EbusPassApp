@@ -27,13 +27,15 @@ public class MyHostApduService extends HostApduService {
 			params[1] = userInfo.get("date_joined");
 
 			try {
-				return (new ValidatePass().execute(params).get()).getBytes();
+				String message = (new ValidatePass().execute(params).get());
+				Log.d("Returning", message);
+				return message.getBytes();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				return "falseError communicating with server".getBytes();
+				return "0error".getBytes();
 			} catch (ExecutionException e) {
 				e.printStackTrace();
-				return "falseError communication with server".getBytes();
+				return "0error".getBytes();
 			}
 		}
 		else {
