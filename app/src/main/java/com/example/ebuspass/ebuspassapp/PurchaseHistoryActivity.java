@@ -40,8 +40,6 @@ public class PurchaseHistoryActivity extends ActionBarActivity {
 
     TextView resultView;
     TableLayout resultTable;
-    public String useremail;
-    public String userdateJoined;
 
     private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
     private final int FP = ViewGroup.LayoutParams.FILL_PARENT;

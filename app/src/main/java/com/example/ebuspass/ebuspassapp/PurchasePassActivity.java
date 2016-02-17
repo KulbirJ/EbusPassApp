@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -113,6 +115,13 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_purchasepass, menu);
+        return true;
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ButtonPurchase:
@@ -167,6 +176,30 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
                 PerRideRadioGroup.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.profile) {
+            startActivity(new Intent(this, UserInfo.class));
+            return true;
+        }
+        else if (id == R.id.purchase_history) {
+            startActivity(new Intent(this, PurchaseHistoryActivity.class));
+            return true;
+        }
+        else if (id == R.id.loginmain) {
+            startActivity(new Intent(this, LoginMain.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     public void onBraintreeSubmit(View v) {
