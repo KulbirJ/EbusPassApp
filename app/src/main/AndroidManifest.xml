@@ -54,7 +54,10 @@
         <activity
             android:name=".PurchaseHistoryActivity"
             android:theme="@style/AppTheme.ActionBar" >
-
+        </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:theme="@style/AppTheme.ActionBar" >
         </activity>
         <activity
             android:name=".UserInfo"
