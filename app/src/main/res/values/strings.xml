@@ -14,5 +14,6 @@
     <string name="welcome">Welcome</string>
     <string name="btn_logout">LOGOUT</string>
     <string name="name">Fullname</string>
+    <string name = "reset">https://ebuspass.com</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.example.ebuspass.ebuspassapp;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private Button btnLogin;
+    private Button reset;
     private Button btnLinkToRegister;
     private EditText inputusername;
     private EditText inputPassword;
@@ -43,6 +45,7 @@ public class LoginActivity extends Activity {
         inputusername = (EditText) findViewById(R.id.uname);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        reset = (Button) findViewById(R.id.reset);
         btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
 
         // Progress dialog
@@ -92,6 +95,14 @@ public class LoginActivity extends Activity {
                         RegisterActivity.class);
                 startActivity(i);
                 finish();
+            }
+        });
+        reset.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                String url = "https://www.ebuspass.com/accounts/password/reset/";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
             }
         });
 
