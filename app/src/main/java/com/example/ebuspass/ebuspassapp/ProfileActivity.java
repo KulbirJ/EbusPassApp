@@ -64,10 +64,10 @@ public class ProfileActivity extends ActionBarActivity {
         String result = "";
         InputStream isr = null;
         ArrayList<BasicNameValuePair> dataToSend = new ArrayList<>();
-        dataToSend.add(new BasicNameValuePair("email","77065462@qq.com"));
-        dataToSend.add(new BasicNameValuePair("date_joined","2015-11-09 18:01:53"));
-        //dataToSend.add(new BasicNameValuePair("email",useremail));
-        //dataToSend.add(new BasicNameValuePair("date_joined",userdateJoined));
+        //dataToSend.add(new BasicNameValuePair("email","77065462@qq.com"));
+        //dataToSend.add(new BasicNameValuePair("date_joined","2015-11-09 18:01:53"));
+        dataToSend.add(new BasicNameValuePair("email",useremail));
+        dataToSend.add(new BasicNameValuePair("date_joined",userdateJoined));
 
         try {
 
