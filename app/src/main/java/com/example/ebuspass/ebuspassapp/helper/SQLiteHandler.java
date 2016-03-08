@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.Date;
 import java.util.HashMap;
 
 public class   SQLiteHandler extends SQLiteOpenHelper {
@@ -24,7 +23,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	// Database Name
-	private static final String DATABASE_NAME = "android_api4";
+	private static final String DATABASE_NAME = "android_api5";
 
 	// Login table name
 	private static final String TABLE_USER = "user";
@@ -38,10 +37,10 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 	private static final String KEY_UNAME = "username";
 	private static final String KEY_CREATED_AT = "date_joined";
 
-	private static final String Buspass ="monthlyPass";
-	private static final String Rides= "rides";
-	private static final String Rides_taken = "Rides_t";
-	private static final String Key_S = "key";
+	private static final String BUSPASS ="monthlyPass";
+	private static final String RIDES = "rides";
+	private static final String RIDES_TAKEN = "Rides_t";
+	private static final String KEY = "key";
 
 	public SQLiteHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -54,7 +53,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 			+ KEY_UNAME + " TEXT," + KEY_CREATED_AT + " TEXT" + ")";
 
 	String CREATE_PASS_TABLE =  "CREATE TABLE " + TABLE_BUSPASS + "(" + KEY_ID + " INTEGER PRIMARY KEY," +
-			Buspass + " TEXT," + Rides + " TEXT," + Rides_taken + "TEXT," + Key_S + "TEXT" +")";
+			BUSPASS + " TEXT," + RIDES + " TEXT," + RIDES_TAKEN + "TEXT," + KEY + "TEXT" +")";
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
@@ -96,18 +95,18 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		Log.d(TAG, "New user inserted into sqlite: " + id);
 	}
 
-	public void addPass(String monthlyPass, String rides){
+	public void addPass(String monthlyPass, String rides, String key){
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(Buspass, monthlyPass);
-		values.put(Rides, rides);
+		values.put(BUSPASS, monthlyPass);
+		values.put(RIDES, rides);
+		values.put(KEY, key);
 
 		long id = db.insert(TABLE_BUSPASS, null, values);
 		db.close();
 
 		Log.d(TAG, "pass info stored: " +id);
-
 	}
 	/**
 	 * Getting user data from database
@@ -127,8 +126,6 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 			user.put("uid", cursor.getString(4));
 			user.put("username", cursor.getString(5));
 			user.put("date_joined", cursor.getString(6));
-
-
 		}
 		cursor.close();
 		db.close();
@@ -146,17 +143,15 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
-		// Move to first row
-		cursor.moveToFirst();
-		//while(cursor.moveToNext())
+
 		cursor.moveToFirst();
 		if (cursor.getCount() > 0){
 			pass.put("monthlyPass", cursor.getString(1));
 			pass.put("rides", cursor.getString(2));
+			pass.put("key", cursor.getString(3));
 		}
 		cursor.close();
 		db.close();
-		//return pass
 		Log.d(TAG, "Getting pass: " +pass.toString());
 
 		return pass;

@@ -19,24 +19,15 @@ public class MyHostApduService extends HostApduService {
 		if (selectAidApdu(apdu)) {
 
 			SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
-			HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+			HashMap<String, String> passInfo = sqlHandler.getPassDetails();
 
-			String[] params = new String[2];
+			String monthly = passInfo.get("monthlyPass");
+			String rides = passInfo.get("rides");
+			String key = passInfo.get("key");
 
-			params[0] = userInfo.get("email");
-			params[1] = userInfo.get("date_joined");
-
-			try {
-				String message = (new ValidatePass().execute(params).get());
-				Log.d("Returning", message);
-				return message.getBytes();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				return "0error".getBytes();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-				return "0error".getBytes();
-			}
+			String response = key + monthly + rides;
+			Log.d("Returning", response);
+			return response.getBytes();
 		}
 		else {
 			Log.i("HCEDEMO", "Received: " + new String(apdu));

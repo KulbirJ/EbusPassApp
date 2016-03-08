@@ -34,10 +34,7 @@ public class LoginMain extends ActionBarActivity {
     private SessionManager session;
     TextView monthlyText, ridesRemainingText;
 
-
     private String ridesRemaining, monthlyPass;
-
-
 
     @Override
     protected  void onCreate(Bundle savedInstanceState)
@@ -52,7 +49,6 @@ public class LoginMain extends ActionBarActivity {
         session = new SessionManager(getApplicationContext());
         SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
         HashMap<String, String> userInfo = sqlHandler.getUserDetails();
-        HashMap<String, String> passInfo = sqlHandler.getPassDetails();
         if (!session.isLoggedIn()) {
             logoutUser();
         }
@@ -72,9 +68,6 @@ public class LoginMain extends ActionBarActivity {
         String email = userInfo.get("email");
         String dateJoined = userInfo.get("date_joined");
 
-        String mPass = passInfo.get("monthlyPass");
-        String ride = passInfo.get("rides");
-
         RequestParams params = new RequestParams();
         params.put("email", email);
         params.put("date_joined", dateJoined);
@@ -88,28 +81,22 @@ public class LoginMain extends ActionBarActivity {
 
                 try {
                     response = new String(responseBody, "UTF-8");
+                    jObj = new JSONObject(response);
 
-                    if (response.equalsIgnoreCase("No Pass")) {
-                        Log.d("getPasInformation", "No Pass");
+                    Boolean error = !jObj.isNull("error");
+                    String key = jObj.getString("key");
+
+                    if (error) {
                         monthlyText.setText("");
-                        ridesRemainingText.setText("You do not have a pass");
-                    } else if (response.equalsIgnoreCase("Invalid User")) {
-                        Log.d("getPassInformation", "Invalid User");
-                        monthlyText.setText("There was an error grabbing your pass");
-                        ridesRemainingText.setText("Please try logging in again");
+                        ridesRemainingText.setText(jObj.getString("error"));
+                        db.addPass("01/01/1990", "0", key);
                     } else {
-
-                        jObj = new JSONObject(response);
                         String ridesRemaining = jObj.getString("rides");
                         String expiryDate = jObj.getString("monthly");
 
-                        Log.d("getPassInformation", response);
-                        Log.d("monthly", expiryDate);
-                        Log.d("rides", ridesRemaining);
-                        db.addPass(expiryDate, ridesRemaining);
+                        db.addPass(expiryDate, ridesRemaining, key);
                         monthlyText.setText("Expires On: " + expiryDate);
                         ridesRemainingText.setText(ridesRemaining + " Rides Remaining");
-
                     }
 
                 } catch (UnsupportedEncodingException e) {
@@ -117,8 +104,6 @@ public class LoginMain extends ActionBarActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
 
             @Override
@@ -131,6 +116,13 @@ public class LoginMain extends ActionBarActivity {
             }
         });
 
+
+        HashMap<String, String> sqlPassInfo = sqlHandler.getPassDetails();
+
+        String monthly = sqlPassInfo.get("monthlyPass");
+        Log.d("Monthly", monthly + " ");
+        String rides = sqlPassInfo.get("rides");
+        Log.d("Rides", rides + " ");
 
     }
     @Override
