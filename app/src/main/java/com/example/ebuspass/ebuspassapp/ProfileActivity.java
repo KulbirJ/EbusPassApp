@@ -160,7 +160,7 @@ public class ProfileActivity extends ActionBarActivity {
                 tablerow6.setBackgroundColor(Color.rgb(222, 220, 210));
                 TextView tx6=new TextView(this);
                 s=json.getString("last_login");
-                tx6.setText("Last login:   "+s);
+                tx6.setText("Last login website:   "+s);
                 tx6.setTextSize(16);
                 tablerow6.addView(tx6);
                 resultTable.addView(tablerow6, new TableLayout.LayoutParams(FP, WC));
