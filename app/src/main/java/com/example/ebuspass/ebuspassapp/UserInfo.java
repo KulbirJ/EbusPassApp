@@ -28,7 +28,7 @@ public class UserInfo extends ActionBarActivity implements OnMessageReceived, Re
     private IsoDepAdapter isoDepAdapter;
     private SQLiteHandler db;
     private SessionManager session;
-
+    private TextView txtpass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +36,8 @@ public class UserInfo extends ActionBarActivity implements OnMessageReceived, Re
 
         txtName = (TextView) findViewById(R.id.name);
         txtEmail = (TextView) findViewById(R.id.email);
+        txtpass = (TextView) findViewById(R.id.pass);
+
         btnLogout = (Button) findViewById(R.id.btnLogout);
         isoDepAdapter = new IsoDepAdapter(getLayoutInflater());
        // listView.setAdapter(isoDepAdapter);
@@ -52,14 +54,15 @@ public class UserInfo extends ActionBarActivity implements OnMessageReceived, Re
 
         // Fetching user details from SQLite
         HashMap<String, String> user = db.getUserDetails();
-
+        HashMap<String, String> pass = db.getPassDetails();
         String name = user.get("username");
         String email = user.get("email");
+        String Pass = pass.get("monthlyPass");
 
         // Displaying the user details on the screen
         txtName.setText(name);
         txtEmail.setText(email);
-
+        txtpass.setText(Pass);
         // Logout button click event
         btnLogout.setOnClickListener(new View.OnClickListener() {
 

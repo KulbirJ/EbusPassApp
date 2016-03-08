@@ -52,6 +52,7 @@ public class LoginMain extends ActionBarActivity {
         session = new SessionManager(getApplicationContext());
         SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
         HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+        HashMap<String, String> passInfo = sqlHandler.getPassDetails();
         if (!session.isLoggedIn()) {
             logoutUser();
         }
@@ -70,6 +71,9 @@ public class LoginMain extends ActionBarActivity {
 
         String email = userInfo.get("email");
         String dateJoined = userInfo.get("date_joined");
+
+        String mPass = passInfo.get("monthlyPass");
+        String ride = passInfo.get("rides");
 
         RequestParams params = new RequestParams();
         params.put("email", email);
@@ -102,7 +106,7 @@ public class LoginMain extends ActionBarActivity {
                         Log.d("getPassInformation", response);
                         Log.d("monthly", expiryDate);
                         Log.d("rides", ridesRemaining);
-
+                        db.addPass(expiryDate, ridesRemaining);
                         monthlyText.setText("Expires On: " + expiryDate);
                         ridesRemainingText.setText(ridesRemaining + " Rides Remaining");
 
@@ -120,6 +124,9 @@ public class LoginMain extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                String response = "";
+                JSONObject jObj = null;
+
                 Log.d("getPassInformation", "Failure");
             }
         });

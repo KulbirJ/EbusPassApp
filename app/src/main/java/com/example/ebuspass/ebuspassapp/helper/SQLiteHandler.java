@@ -12,9 +12,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.Date;
 import java.util.HashMap;
 
-public class SQLiteHandler extends SQLiteOpenHelper {
+public class   SQLiteHandler extends SQLiteOpenHelper {
 
 	private static final String TAG = SQLiteHandler.class.getSimpleName();
 
@@ -23,11 +24,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	// Database Name
-	private static final String DATABASE_NAME = "android_api1";
+	private static final String DATABASE_NAME = "android_api4";
 
 	// Login table name
 	private static final String TABLE_USER = "user";
-
+	private static final String TABLE_BUSPASS = "BusPass";
 	// Login Table Columns names
 	private static final String KEY_ID = "id";
 	private static final String KEY_FNAME = "first_name";
@@ -37,18 +38,28 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	private static final String KEY_UNAME = "username";
 	private static final String KEY_CREATED_AT = "date_joined";
 
+	private static final String Buspass ="monthlyPass";
+	private static final String Rides= "rides";
+	private static final String Rides_taken = "Rides_t";
+	private static final String Key_S = "key";
+
 	public SQLiteHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	// Creating Tables
+	String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
+			+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_FNAME + " TEXT,"
+			+ KEY_LNAME + " TEXT," + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT,"
+			+ KEY_UNAME + " TEXT," + KEY_CREATED_AT + " TEXT" + ")";
+
+	String CREATE_PASS_TABLE =  "CREATE TABLE " + TABLE_BUSPASS + "(" + KEY_ID + " INTEGER PRIMARY KEY," +
+			Buspass + " TEXT," + Rides + " TEXT," + Rides_taken + "TEXT," + Key_S + "TEXT" +")";
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
-				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_FNAME + " TEXT,"
-				+ KEY_LNAME + " TEXT," + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT,"
-				+ KEY_UNAME + " TEXT," + KEY_CREATED_AT + " TEXT" + ")";
+
 		db.execSQL(CREATE_LOGIN_TABLE);
+		db.execSQL(CREATE_PASS_TABLE);
 
 		Log.d(TAG, "Database tables created");
 	}
@@ -58,7 +69,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older table if existed
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
-
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_BUSPASS);
 		// Create tables again
 		onCreate(db);
 	}
@@ -66,7 +77,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	/**
 	 * Storing user details in database
 	 * */
-	public void addUser(String first_name, String last_name, String email, String uid, String username, String date_joined) {
+	public void addUser(String first_name, String last_name, String email, String uid, String
+			username, String date_joined) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -84,6 +96,19 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		Log.d(TAG, "New user inserted into sqlite: " + id);
 	}
 
+	public void addPass(String monthlyPass, String rides){
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(Buspass, monthlyPass);
+		values.put(Rides, rides);
+
+		long id = db.insert(TABLE_BUSPASS, null, values);
+		db.close();
+
+		Log.d(TAG, "pass info stored: " +id);
+
+	}
 	/**
 	 * Getting user data from database
 	 * */
@@ -102,6 +127,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 			user.put("uid", cursor.getString(4));
 			user.put("username", cursor.getString(5));
 			user.put("date_joined", cursor.getString(6));
+
+
 		}
 		cursor.close();
 		db.close();
@@ -111,6 +138,30 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		return user;
 	}
 
+	// Getting pass details from database
+
+	public HashMap<String, String> getPassDetails(){
+		HashMap<String, String > pass = new HashMap<String, String>();
+		String selectQuery = "SELECT * FROM " +TABLE_BUSPASS;
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		// Move to first row
+		cursor.moveToFirst();
+		//while(cursor.moveToNext())
+		cursor.moveToFirst();
+		if (cursor.getCount() > 0){
+			pass.put("monthlyPass", cursor.getString(1));
+			pass.put("rides", cursor.getString(2));
+		}
+		cursor.close();
+		db.close();
+		//return pass
+		Log.d(TAG, "Getting pass: " +pass.toString());
+
+		return pass;
+	}
+
 	/**
 	 * Re crate database Delete all tables and create them again
 	 * */
@@ -118,6 +169,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		// Delete All Rows
 		db.delete(TABLE_USER, null, null);
+		db.delete(TABLE_BUSPASS, null, null);
 		db.close();
 
 		Log.d(TAG, "Deleted all user info from sqlite");

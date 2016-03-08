@@ -140,14 +140,20 @@ public class LoginActivity extends Activity {
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
+                      // JSONObject pass = jObj.getJSONObject("pass");
+
                         String fname = user.getString("first_name");
                         String lname = user.getString("last_name");
                         String email = user.getString("email");
                         String uname = user.getString("username");
                         String created_at = user.getString("date_joined");
+                        //String mpass = pass.getString("monthlyPass");
+                        //String ride = pass.getString("rides");
+
 
                         // Inserting row in users table
                         db.addUser(fname,lname, email, uid,uname, created_at);
+                      //  db.addPass(mpass, ride);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this,
