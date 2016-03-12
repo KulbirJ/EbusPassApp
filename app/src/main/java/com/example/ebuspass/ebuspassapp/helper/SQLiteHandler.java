@@ -8,6 +8,7 @@ package com.example.ebuspass.ebuspassapp.helper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -88,14 +89,21 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		values.put(KEY_UNAME, username);
 		values.put(KEY_CREATED_AT, date_joined); // Created At
 
-		// Inserting Row
-		long id = db.insert(TABLE_USER, null, values);
+		if(getProfilesCount()==0){
+			// Inserting Row
+			long id = db.insert(TABLE_USER, null, values);
+			Log.d(TAG, "New user inserted into sqlite: " + id);
+		}else
+		{
+			long id = db.update(TABLE_USER, values,  KEY_UNAME + "=" + username, null);
+			Log.d(TAG, "Used updated into sqlite: " + id);
+		}
+		Log.d("Rows in user table", Long.toString(getProfilesCount()));
 		db.close(); // Closing database connection
 
-		Log.d(TAG, "New user inserted into sqlite: " + id);
 	}
 
-	public void addPass(String monthlyPass, String rides, String key, String username){
+	public void addPass(String monthlyPass, String rides, String key){
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -178,6 +186,12 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		db.close();
 
 		Log.d(TAG, "Deleted all user info from sqlite");
+	}
+	public long getProfilesCount() {
+		SQLiteDatabase db = this.getReadableDatabase();
+		long cnt = DatabaseUtils.queryNumEntries(db, TABLE_USER);
+		//db.close();
+		return cnt;
 	}
 
 }
