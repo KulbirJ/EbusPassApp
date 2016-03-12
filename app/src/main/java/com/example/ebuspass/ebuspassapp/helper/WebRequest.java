@@ -18,7 +18,7 @@ import cz.msebera.android.httpclient.Header;
  */
 public final class WebRequest {
 
-    static String websiteUrl = "https://1c057fae.ngrok.com";//"https://www.ebuspass.com";
+    static String websiteUrl = "https://www.ebuspass.com";
 
     private static AsyncHttpClient asyncClient = new AsyncHttpClient();
 
