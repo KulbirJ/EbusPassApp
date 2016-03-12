@@ -112,7 +112,7 @@ public class LoginMain extends ActionBarActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                HashMap<String, String> passInfo = sqlHandler.getPassDetails();
+                HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
                 String monthly = passInfo.get("monthlyPass");
                 String rides = passInfo.get("rides");
                 monthlyText.setText("Expires On: " + monthly);

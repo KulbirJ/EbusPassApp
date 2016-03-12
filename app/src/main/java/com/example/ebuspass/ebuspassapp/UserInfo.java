@@ -54,7 +54,7 @@ public class UserInfo extends ActionBarActivity implements OnMessageReceived, Re
 
         // Fetching user details from SQLite
         HashMap<String, String> user = db.getUserDetails();
-        HashMap<String, String> pass = db.getPassDetails();
+        HashMap<String, String> pass = db.getPassDetails(user.get("username"));
         String name = user.get("username");
         String email = user.get("email");
         String Pass = pass.get("monthlyPass");

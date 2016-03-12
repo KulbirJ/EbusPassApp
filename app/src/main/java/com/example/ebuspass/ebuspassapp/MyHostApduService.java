@@ -12,12 +12,13 @@ import java.util.concurrent.ExecutionException;
 
 public class MyHostApduService extends HostApduService {
 
-	private int messageCounter = 0;
-	private SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
-	private HashMap<String, String> passInfo = sqlHandler.getPassDetails();
-
 	@Override
 	public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
+
+		SQLiteHandler sqlHandler = new SQLiteHandler(getApplicationContext());
+		HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+		HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
+
 		if (selectAidApdu(apdu)) {
 
 			String monthly = passInfo.get("monthlyPass");

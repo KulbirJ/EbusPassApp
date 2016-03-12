@@ -92,16 +92,15 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		values.put(KEY_CREATED_AT, date_joined); // Created At
 
 		if(getProfilesCount()==0){
-			// Inserting Row
 			long id = db.insert(TABLE_USER, null, values);
 			Log.d(TAG, "New user inserted into sqlite: " + id);
 		}else
 		{
-			long id = db.update(TABLE_USER, values,  KEY_UNAME + "=" + username, null);
+			long id = db.update(TABLE_USER, values,  KEY_UNAME + " = '" + username + "'", null);
 			Log.d(TAG, "Used updated into sqlite: " + id);
 		}
 		Log.d("Rows in user table", Long.toString(getProfilesCount()));
-		db.close(); // Closing database connection
+		db.close();
 
 	}
 
@@ -121,22 +120,12 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		}
 		else
 		{
-			long id = db.update(TABLE_BUSPASS,values, KEY_UNAME + "=" + username, null);
-			Log.d(TAG, "New Pass inserted into sqlite: " + id);
+			long id = db.update(TABLE_BUSPASS, values, KEY_UNAME + " = '" + username + "'", null);
+			Log.d(TAG, "Update old pass: " + id);
 		}
 		db.close();
-
-
 	}
 
-	public void updatePass(String monthlyPass)
-	{
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues data=new ContentValues();
-		data.put(BUSPASS,monthlyPass);
-
-		db.update(TABLE_BUSPASS, data, "_id=" +1, null);
-	}
 	/**
 	 * Getting user data from database
 	 * */
@@ -165,10 +154,10 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 	}
 
 	// Getting pass details from database
-
-	public HashMap<String, String> getPassDetails(){
+	public HashMap<String, String> getPassDetails(String username){
 		HashMap<String, String > pass = new HashMap<String, String>();
-		String selectQuery = "SELECT * FROM " + TABLE_BUSPASS;
+		String selectQuery = "SELECT * FROM " + TABLE_BUSPASS + " WHERE " + KEY_UNAME
+				+ " = '" + username + "'";
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -195,17 +184,17 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		// Delete All Rows
 		db.delete(TABLE_USER, null, null);
-		db.delete(TABLE_BUSPASS, null, null);
 		db.close();
 
 		Log.d(TAG, "Deleted all user info from sqlite");
 	}
+
 	public long getProfilesCount() {
 		SQLiteDatabase db = this.getReadableDatabase();
 		long cnt = DatabaseUtils.queryNumEntries(db, TABLE_USER);
-		//db.close();
 		return cnt;
 	}
+
 	public long getPassCount(){
 		SQLiteDatabase db = this.getReadableDatabase();
 		long cnt = DatabaseUtils.queryNumEntries(db, TABLE_BUSPASS);
@@ -215,8 +204,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 	public void increaseRidesTaken(String username) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		String updateQuery = "UPDATE " + TABLE_BUSPASS + " SET " + RIDES_TAKEN + " = "
-				+ RIDES_TAKEN + " + 1 WHERE " + KEY_UNAME + " = " + username;
+				+ RIDES_TAKEN + " + 1 WHERE " + KEY_UNAME + " = '" + username + "'";
 		db.execSQL(updateQuery);
 	}
-
 }
