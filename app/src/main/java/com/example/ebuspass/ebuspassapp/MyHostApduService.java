@@ -13,30 +13,38 @@ import java.util.concurrent.ExecutionException;
 public class MyHostApduService extends HostApduService {
 
 	private int messageCounter = 0;
+	private SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
+	private HashMap<String, String> passInfo = sqlHandler.getPassDetails();
 
 	@Override
 	public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
 		if (selectAidApdu(apdu)) {
 
-			SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
-			HashMap<String, String> passInfo = sqlHandler.getPassDetails();
-
 			String monthly = passInfo.get("monthlyPass");
 			String rides = passInfo.get("rides");
 			String key = passInfo.get("key");
+
+			if(monthly == null || monthly.equalsIgnoreCase("None")) {
+				monthly = "1990/01/01";
+			}
+
+			if(rides == null) {
+				rides = "0";
+			}
 
 			String response = key + monthly + rides;
 			Log.d("Returning", response);
 			return response.getBytes();
 		}
 		else {
-			Log.i("HCEDEMO", "Received: " + new String(apdu));
-			return getNextMessage();
+			String message = new String(apdu).substring(0, apdu.length - 1);
+			if(message.equalsIgnoreCase("ReduceRides")) {
+				Log.d("NFC", "Matches. Reduce");
+				sqlHandler.increaseRidesTaken(passInfo.get("username"));
+			}
+			Log.i("NFC", "Received: " + message);
+			return null;
 		}
-	}
-
-	private byte[] getNextMessage() {
-		return ("Message from android: " + messageCounter++).getBytes();
 	}
 
 	private boolean selectAidApdu(byte[] apdu) {
@@ -45,6 +53,6 @@ public class MyHostApduService extends HostApduService {
 
 	@Override
 	public void onDeactivated(int reason) {
-		Log.i("HCEDEMO", "Deactivated: " + reason);
+		Log.i("NFC", "Deactivated: " + reason);
 	}
 }
