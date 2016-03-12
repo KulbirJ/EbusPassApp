@@ -35,7 +35,7 @@ public class LoginMain extends ActionBarActivity {
     TextView monthlyText, ridesRemainingText;
 
     private String ridesRemaining, monthlyPass;
-
+    SQLiteHandler sqlHandler ;
     @Override
     protected  void onCreate(Bundle savedInstanceState)
     {
@@ -47,8 +47,10 @@ public class LoginMain extends ActionBarActivity {
 
         // session manager
         session = new SessionManager(getApplicationContext());
-        SQLiteHandler sqlHandler = new SQLiteHandler(this.getApplicationContext());
+        sqlHandler = new SQLiteHandler(this.getApplicationContext());
         HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+
+
         if (!session.isLoggedIn()) {
             logoutUser();
         }
@@ -95,6 +97,7 @@ public class LoginMain extends ActionBarActivity {
                         String expiryDate = jObj.getString("monthly");
 
                         db.addPass(expiryDate, ridesRemaining, key);
+                        Log.d("Key ",key);
                         monthlyText.setText("Expires On: " + expiryDate);
                         ridesRemainingText.setText(ridesRemaining + " Rides Remaining");
                     }
@@ -109,10 +112,13 @@ public class LoginMain extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                String response = "";
-                JSONObject jObj = null;
 
-                Log.d("getPassInformation", "Failure");
+                HashMap<String, String> passInfo = sqlHandler.getPassDetails();
+                String monthly = passInfo.get("monthlyPass");
+                String rides = passInfo.get("rides");
+                 monthlyText.setText("Expires On: " + monthly);
+                ridesRemainingText.setText(rides + " Rides Remaining");
+                Log.d("getPassInformation", "Offline");
             }
         });
 

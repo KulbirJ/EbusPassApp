@@ -23,7 +23,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	// Database Name
-	private static final String DATABASE_NAME = "android_api5";
+	private static final String DATABASE_NAME = "android_api8";
 
 	// Login table name
 	private static final String TABLE_USER = "user";
@@ -39,8 +39,8 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 
 	private static final String BUSPASS ="monthlyPass";
 	private static final String RIDES = "rides";
-	private static final String RIDES_TAKEN = "Rides_t";
-	private static final String KEY = "key";
+	private static final String RIDES_TAKEN = "rides_taken";
+	private static final String KEY_s = "secure_key";
 
 	public SQLiteHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,7 +53,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 			+ KEY_UNAME + " TEXT," + KEY_CREATED_AT + " TEXT" + ")";
 
 	String CREATE_PASS_TABLE =  "CREATE TABLE " + TABLE_BUSPASS + "(" + KEY_ID + " INTEGER PRIMARY KEY," +
-			BUSPASS + " TEXT," + RIDES + " TEXT," + RIDES_TAKEN + "TEXT," + KEY + "TEXT" +")";
+			BUSPASS + " TEXT," + RIDES + " TEXT," + RIDES_TAKEN + " TEXT, " + KEY_s + " TEXT" + ")";
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
@@ -101,12 +101,22 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(BUSPASS, monthlyPass);
 		values.put(RIDES, rides);
-		values.put(KEY, key);
+		values.put(RIDES_TAKEN, "0");
+		values.put(KEY_s, key);
 
 		long id = db.insert(TABLE_BUSPASS, null, values);
+
 		db.close();
 
 		Log.d(TAG, "pass info stored: " +id);
+	}
+	public void updatePass(String monthlyPass)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues data=new ContentValues();
+		data.put(BUSPASS,monthlyPass);
+
+		db.update(TABLE_BUSPASS, data, "_id=" +1, null);
 	}
 	/**
 	 * Getting user data from database
@@ -148,7 +158,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		if (cursor.getCount() > 0){
 			pass.put("monthlyPass", cursor.getString(1));
 			pass.put("rides", cursor.getString(2));
-			pass.put("key", cursor.getString(3));
+			pass.put("key", cursor.getString(4));
 		}
 		cursor.close();
 		db.close();
