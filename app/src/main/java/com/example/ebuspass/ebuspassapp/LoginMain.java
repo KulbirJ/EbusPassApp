@@ -1,11 +1,15 @@
 package com.example.ebuspass.ebuspassapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NfcAdapter;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +42,7 @@ public class LoginMain extends ActionBarActivity {
     private SQLiteHandler db;
     private SessionManager session;
     TextView monthlyText, ridesRemainingText;
+    final Context context = this;
 
     private String ridesRemaining, monthlyPass;
     SQLiteHandler sqlHandler ;
@@ -51,10 +56,35 @@ public class LoginMain extends ActionBarActivity {
         NfcAdapter nfcAdpt = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdpt!=null) {
             if (!nfcAdpt.isEnabled()) {
+
+                    AlertDialog.Builder alertbox = new AlertDialog.Builder(context);
+                    alertbox.setTitle("Info");
+                    alertbox.setMessage("NFC Is disabled ");
+                    alertbox.setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startNfcSettingsActivity();
+                        }
+                    });
+                    alertbox.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    alertbox.show();
+
+
+            }
+        }
+        /*
+        if(nfcAdpt!=null) {
+            if (!nfcAdpt.isEnabled()) {
                 //Nfc settings are disabled
                 startNfcSettingsActivity();
             }
-        }
+        }*/
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
