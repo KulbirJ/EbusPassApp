@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
 import com.example.ebuspass.ebuspassapp.helper.SessionManager;
@@ -46,13 +48,12 @@ public class LoginMain extends ActionBarActivity {
         setContentView(R.layout.login_main);
 
         // Network connectivity check
-        if(isNetworkAvailable())
-        {
-            Log.d("Connected","yes");
-        }
-        else
-        {
-            Log.d("Connected", "No");
+        NfcAdapter nfcAdpt = NfcAdapter.getDefaultAdapter(this);
+        if(nfcAdpt!=null) {
+            if (!nfcAdpt.isEnabled()) {
+                //Nfc settings are disabled
+                startNfcSettingsActivity();
+            }
         }
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -124,6 +125,7 @@ public class LoginMain extends ActionBarActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+
                 HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
                 String monthly = passInfo.get("monthlyPass");
                 String rides = passInfo.get("rides");
@@ -182,5 +184,16 @@ public class LoginMain extends ActionBarActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    protected void startNfcSettingsActivity() {
+        Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+        if (android.os.Build.VERSION.SDK_INT >= 16) {
+
+            startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
+        } else {
+            startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+        }
+    }
+
 
 }

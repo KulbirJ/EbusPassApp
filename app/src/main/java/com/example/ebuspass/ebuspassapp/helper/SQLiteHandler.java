@@ -171,7 +171,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 			pass.put("username", cursor.getString(5));
 		}
 		cursor.close();
-		db.close();
+		
 		Log.d(TAG, "Getting pass: " + pass.toString());
 
 		return pass;
