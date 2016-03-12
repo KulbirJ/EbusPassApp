@@ -171,7 +171,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 			pass.put("username", cursor.getString(5));
 		}
 		cursor.close();
-
+		
 		Log.d(TAG, "Getting pass: " + pass.toString());
 
 		return pass;
@@ -212,6 +212,13 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		}
 		else
 			return ridesTaken;
+	}
+
+	public void resetRidesTaken(String username) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		String query = "UPDATE " + TABLE_BUSPASS + " SET " + RIDES_TAKEN + " = '0' WHERE "
+				+ KEY_UNAME + " = '" + username + "'";
+		db.execSQL(query);
 	}
 
 	public void increaseRidesTaken(String username) {
