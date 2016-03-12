@@ -45,6 +45,9 @@ public class LoginMain extends ActionBarActivity {
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
+        long rows = db.getProfilesCount();
+        String srow = Long.toString(rows);
+        Log.d(" Rows in data: ", srow+ "");
         // session manager
         session = new SessionManager(getApplicationContext());
         sqlHandler = new SQLiteHandler(this.getApplicationContext());
@@ -167,7 +170,6 @@ public class LoginMain extends ActionBarActivity {
 
     private void logoutUser() {
         session.setLogin(false);
-
         db.deleteUsers();
 
         // Launching the login activity
