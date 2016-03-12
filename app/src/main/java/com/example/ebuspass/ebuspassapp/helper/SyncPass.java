@@ -1,44 +1,30 @@
 package com.example.ebuspass.ebuspassapp.helper;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by SimonHanna on 16-01-08.
+ * Created by SimonHanna on 16-03-12.
  */
-public final class WebRequest {
+public class SyncPass extends BroadcastReceiver {
 
-    static String websiteUrl = "https://1c057fae.ngrok.com";//"https://www.ebuspass.com";
+    private SQLiteHandler sqlHandler = null;
 
-    private static AsyncHttpClient asyncClient = new AsyncHttpClient();
-
-    public static void getToken(AsyncHttpResponseHandler handler) {
-        asyncClient.get(websiteUrl + "/generate_token/", handler);
-    }
-
-    public static void sendNonce(RequestParams params, AsyncHttpResponseHandler handler) {
-        asyncClient.post(websiteUrl + "/process_nonce/", params, handler);
-    }
-
-    public static void getPassInformation(RequestParams params, AsyncHttpResponseHandler handler) {
-        asyncClient.post(websiteUrl + "/get_pass_information/", params, handler);
-    }
-
-    public static void syncPass(RequestParams params, AsyncHttpResponseHandler handler) {
-        asyncClient.post(websiteUrl + "/sync_pass/", params, handler);
-    }
-
-    public static void checkForOutdatedPass(SQLiteHandler sqlHandler, Context context) {
+    public void onReceive(Context context, Intent intent) {
+        Log.d("app", "Network connectivity change");
 
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -48,6 +34,7 @@ public final class WebRequest {
             return;
         }
 
+        sqlHandler = new SQLiteHandler(context.getApplicationContext());
         HashMap<String, String> userInfo = sqlHandler.getUserDetails();
         HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
 
@@ -56,6 +43,23 @@ public final class WebRequest {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.d("checkForOutdatedPass", "Success");
+                    String response = "";
+                    JSONObject jObj = null;
+
+                    try {
+                        response = new String(responseBody, "UTF-8");
+                        jObj = new JSONObject(response);
+
+                        Boolean error = !jObj.isNull("error");
+
+                        if (!error) {
+                            getSqlHandler().addPass(jObj.getString("monthly"), jObj.getString("rides"),
+                                    jObj.getString("key"), jObj.getString("username"));
+                            getSqlHandler().getPassDetails(jObj.getString("username"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -66,10 +70,14 @@ public final class WebRequest {
 
             RequestParams params = new RequestParams();
             params.add("rides_taken", passInfo.get("ridesTaken"));
-            params.add("email",userInfo.get("email"));
+            params.add("email", userInfo.get("email"));
             params.add("date_joined", userInfo.get("date_joined"));
 
-            syncPass(params, asyncHandler);
+            WebRequest.syncPass(params, asyncHandler);
         }
+    }
+
+    public SQLiteHandler getSqlHandler() {
+        return sqlHandler;
     }
 }

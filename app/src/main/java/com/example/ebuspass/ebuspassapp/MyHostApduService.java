@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
-import com.example.ebuspass.ebuspassapp.helper.ValidatePass;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class MyHostApduService extends HostApduService {
 
