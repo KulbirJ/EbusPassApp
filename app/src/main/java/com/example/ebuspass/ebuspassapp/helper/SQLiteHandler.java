@@ -110,7 +110,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(BUSPASS, monthlyPass);
 		values.put(RIDES, rides);
-		values.put(RIDES_TAKEN, "0");
+		values.put(RIDES_TAKEN, getRidesTaken(username));
 		values.put(SECURE_KEY, key);
 		values.put(KEY_UNAME, username);
 
@@ -199,6 +199,19 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		long cnt = DatabaseUtils.queryNumEntries(db, TABLE_BUSPASS);
 		return cnt;
+	}
+
+	public String getRidesTaken(String username)
+	{
+
+		HashMap<String, String> passInfo = getPassDetails(username);
+		String ridesTaken = passInfo.get("ridesTaken");
+		if( ridesTaken==null)
+		{
+			return "0";
+		}
+		else
+			return ridesTaken;
 	}
 
 	public void increaseRidesTaken(String username) {

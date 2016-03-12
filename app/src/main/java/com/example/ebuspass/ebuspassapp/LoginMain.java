@@ -1,6 +1,9 @@
 package com.example.ebuspass.ebuspassapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -42,6 +45,15 @@ public class LoginMain extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
 
+        // Network connectivity check
+        if(isNetworkAvailable())
+        {
+            Log.d("Connected","yes");
+        }
+        else
+        {
+            Log.d("Connected", "No");
+        }
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -163,6 +175,12 @@ public class LoginMain extends ActionBarActivity {
         Intent intent = new Intent(LoginMain.this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }
