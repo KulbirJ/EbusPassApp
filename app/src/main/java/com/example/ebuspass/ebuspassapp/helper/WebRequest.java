@@ -1,6 +1,7 @@
 package com.example.ebuspass.ebuspassapp.helper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -40,7 +41,7 @@ public final class WebRequest {
         asyncClient.post(websiteUrl + "/sync_pass/", params, handler);
     }
 
-    public static void checkForOutdatedPass(final SQLiteHandler sqlHandler, Context context) {
+    public static void checkForOutdatedPass(final SQLiteHandler sqlHandler, final Context context) {
 
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -50,7 +51,7 @@ public final class WebRequest {
             return;
         }
 
-        HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+        final HashMap<String, String> userInfo = sqlHandler.getUserDetails();
         HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
 
         if(!passInfo.get("ridesTaken").equalsIgnoreCase("0")) {
@@ -71,6 +72,9 @@ public final class WebRequest {
                             sqlHandler.addPass(jObj.getString("monthly"), jObj.getString("rides"),
                                     jObj.getString("key"), jObj.getString("username"));
                             sqlHandler.getPassDetails(jObj.getString("username"));
+                            Intent intent = new Intent("com.ebuspass.updatepass");
+                            sqlHandler.resetRidesTaken(userInfo.get("username"));
+                            context.sendBroadcast(intent);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

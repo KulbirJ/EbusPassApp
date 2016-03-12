@@ -1,7 +1,9 @@
 package com.example.ebuspass.ebuspassapp;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -32,6 +34,18 @@ import cz.msebera.android.httpclient.Header;
  * Created by Kulbir on 2015-12-20.
  */
 public class LoginMain extends ActionBarActivity {
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Receiver", "In the receiver");
+            HashMap<String, String> userInfo = sqlHandler.getUserDetails();
+            HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
+            monthlyText.setText("Expires On: " + passInfo.get("monthly"));
+            ridesRemainingText.setText(passInfo.get("rides") + " rides remaining");
+        }
+    };
+
     Button purchase;
     private SQLiteHandler db;
     private SessionManager session;
@@ -42,18 +56,12 @@ public class LoginMain extends ActionBarActivity {
     @Override
     protected  void onCreate(Bundle savedInstanceState)
     {
+
+        registerReceiver(receiver, new IntentFilter("com.ebuspass.updatepass"));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
 
-        // Network connectivity check
-        if(isNetworkAvailable())
-        {
-            Log.d("Connected","yes");
-        }
-        else
-        {
-            Log.d("Connected", "No");
-        }
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -151,15 +159,18 @@ public class LoginMain extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.profile) {
+            unregisterReceiver(receiver);
             startActivity(new Intent(this, ProfileActivity.class));
             return true;
         }
         else if (id == R.id.purchase_history) {
+            unregisterReceiver(receiver);
             startActivity(new Intent(this, PurchaseHistoryActivity.class));
             return true;
         }
         else if (id == R.id.logout)
         {
+            unregisterReceiver(receiver);
             logoutUser();
             return true;
         }
