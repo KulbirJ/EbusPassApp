@@ -72,7 +72,7 @@
         </activity>
 
         <service
-            android:name="com.example.ebuspass.ebuspassapp.MyHostApduService"
+            android:name=".NfcService"
             android:exported="true"
             android:permission="android.permission.BIND_NFC_SERVICE" >
             <intent-filter>

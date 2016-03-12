@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.example.ebuspass.ebuspassapp.helper.WebRequest;
 
 import java.util.HashMap;
 
-public class MyHostApduService extends HostApduService {
+public class NfcService extends HostApduService {
 
 	@Override
 	public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
@@ -40,6 +41,7 @@ public class MyHostApduService extends HostApduService {
 			if(message.equalsIgnoreCase("ReduceRides")) {
 				Log.d("NFC", "Matches. Reduce");
 				sqlHandler.increaseRidesTaken(passInfo.get("username"));
+				WebRequest.checkForOutdatedPass(sqlHandler, this.getApplicationContext());
 			}
 			Log.i("NFC", "Received: " + message);
 			return null;

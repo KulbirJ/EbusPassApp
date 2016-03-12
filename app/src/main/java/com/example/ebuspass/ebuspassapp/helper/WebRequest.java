@@ -9,6 +9,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.Header;
@@ -38,7 +40,7 @@ public final class WebRequest {
         asyncClient.post(websiteUrl + "/sync_pass/", params, handler);
     }
 
-    public static void checkForOutdatedPass(SQLiteHandler sqlHandler, Context context) {
+    public static void checkForOutdatedPass(final SQLiteHandler sqlHandler, Context context) {
 
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -56,6 +58,23 @@ public final class WebRequest {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.d("checkForOutdatedPass", "Success");
+                    String response = "";
+                    JSONObject jObj = null;
+
+                    try {
+                        response = new String(responseBody, "UTF-8");
+                        jObj = new JSONObject(response);
+
+                        Boolean error = !jObj.isNull("error");
+
+                        if (!error) {
+                            sqlHandler.addPass(jObj.getString("monthly"), jObj.getString("rides"),
+                                    jObj.getString("key"), jObj.getString("username"));
+                            sqlHandler.getPassDetails(jObj.getString("username"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
