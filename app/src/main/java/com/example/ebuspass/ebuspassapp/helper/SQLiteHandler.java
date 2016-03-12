@@ -115,11 +115,18 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		values.put(SECURE_KEY, key);
 		values.put(KEY_UNAME, username);
 
-		long id = db.insert(TABLE_BUSPASS, null, values);
-
+		if(getPassCount()==0) {
+			long id = db.insert(TABLE_BUSPASS, null, values);
+			Log.d(TAG, "New Pass inserted into sqlite: " + id);
+		}
+		else
+		{
+			long id = db.update(TABLE_BUSPASS,values, KEY_UNAME + "=" + username, null);
+			Log.d(TAG, "New Pass inserted into sqlite: " + id);
+		}
 		db.close();
 
-		Log.d(TAG, "pass info stored: " +id);
+
 	}
 
 	public void updatePass(String monthlyPass)
@@ -199,6 +206,11 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		//db.close();
 		return cnt;
 	}
+	public long getPassCount(){
+		SQLiteDatabase db = this.getReadableDatabase();
+		long cnt = DatabaseUtils.queryNumEntries(db, TABLE_BUSPASS);
+		return cnt;
+	}
 
 	public void increaseRidesTaken(String username) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -206,4 +218,5 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 				+ RIDES_TAKEN + " + 1 WHERE " + KEY_UNAME + " = " + username;
 		db.execSQL(updateQuery);
 	}
+
 }
