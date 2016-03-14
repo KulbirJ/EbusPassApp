@@ -183,7 +183,7 @@ public class ProfileActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_purchasehist, menu);
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
 
 
@@ -202,6 +202,9 @@ public class ProfileActivity extends ActionBarActivity {
             return true;
         }
         else if (id == R.id.purchase_pass) {
+            startActivity(new Intent(this, PurchasePassActivity.class));
+            return true;
+        }else if (id == R.id.profile) {
             startActivity(new Intent(this, PurchasePassActivity.class));
             return true;
         }
