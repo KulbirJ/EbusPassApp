@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 import com.example.ebuspass.ebuspassapp.helper.WebRequest;
 
 import java.util.HashMap;
@@ -13,6 +14,11 @@ public class NfcService extends HostApduService {
 
 	@Override
 	public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
+
+        SessionManager session = new SessionManager(getApplicationContext());
+        if(!session.isLoggedIn()) {
+            return null;
+        }
 
 		SQLiteHandler sqlHandler = new SQLiteHandler(getApplicationContext());
 		HashMap<String, String> userInfo = sqlHandler.getUserDetails();
