@@ -1,13 +1,17 @@
 package com.example.ebuspass.ebuspassapp;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NfcAdapter;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -63,6 +67,7 @@ public class LoginMain extends ActionBarActivity {
     private SQLiteHandler db;
     private SessionManager session;
     TextView monthlyText, ridesRemainingText;
+    final Context context = this;
 
     private String ridesRemaining, monthlyPass;
     SQLiteHandler sqlHandler ;
@@ -79,10 +84,29 @@ public class LoginMain extends ActionBarActivity {
         NfcAdapter nfcAdpt = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdpt!=null) {
             if (!nfcAdpt.isEnabled()) {
-                //Nfc settings are disabled
-                startNfcSettingsActivity();
+
+                    AlertDialog.Builder alertbox = new AlertDialog.Builder(context);
+                    alertbox.setTitle("Info");
+                    alertbox.setMessage("NFC Is disabled ");
+                    alertbox.setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startNfcSettingsActivity();
+                        }
+                    });
+                    alertbox.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    alertbox.show();
+
+
             }
         }
+
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -179,7 +203,11 @@ public class LoginMain extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.profile) {
+        if (id == R.id.purchase_pass) {
+            unregisterReceiver(receiver);
+            startActivity(new Intent(this, PurchasePassActivity.class));
+            return true;
+        }else if (id == R.id.profile) {
             unregisterReceiver(receiver);
             startActivity(new Intent(this, ProfileActivity.class));
             return true;
