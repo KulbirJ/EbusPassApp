@@ -95,13 +95,7 @@ public class LoginMain extends ActionBarActivity {
 
             }
         }
-        /*
-        if(nfcAdpt!=null) {
-            if (!nfcAdpt.isEnabled()) {
-                //Nfc settings are disabled
-                startNfcSettingsActivity();
-            }
-        }*/
+
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -198,7 +192,11 @@ public class LoginMain extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.profile) {
+        if (id == R.id.purchase_pass) {
+            unregisterReceiver(receiver);
+            startActivity(new Intent(this, PurchasePassActivity.class));
+            return true;
+        }else if (id == R.id.profile) {
             unregisterReceiver(receiver);
             startActivity(new Intent(this, ProfileActivity.class));
             return true;
