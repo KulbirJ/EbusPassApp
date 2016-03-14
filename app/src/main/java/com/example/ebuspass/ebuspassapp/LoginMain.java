@@ -43,8 +43,19 @@ public class LoginMain extends ActionBarActivity {
             Log.d("Receiver", "In the receiver");
             HashMap<String, String> userInfo = sqlHandler.getUserDetails();
             HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
-            monthlyText.setText("Expires On: " + passInfo.get("monthly"));
-            ridesRemainingText.setText(passInfo.get("rides") + " rides remaining");
+
+            String monthly = passInfo.get("monthly");
+            if(monthly == null || monthly.equalsIgnoreCase("null")) {
+                monthly = "None";
+            }
+
+            String rides = passInfo.get("rides");
+            if(rides == null || rides.equalsIgnoreCase("null")) {
+                rides = "0";
+            }
+
+            monthlyText.setText("Expires On: " + monthly);
+            ridesRemainingText.setText(rides + " rides remaining");
         }
     };
 
