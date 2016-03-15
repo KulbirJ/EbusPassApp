@@ -184,7 +184,7 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
         int id = item.getItemId();
 
         if (id == R.id.profile) {
-            startActivity(new Intent(this, UserInfo.class));
+            startActivity(new Intent(this, ProfileActivity.class));
             return true;
         }
         else if (id == R.id.purchase_history) {

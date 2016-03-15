@@ -47,8 +47,19 @@ public class LoginMain extends ActionBarActivity {
             Log.d("Receiver", "In the receiver");
             HashMap<String, String> userInfo = sqlHandler.getUserDetails();
             HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
-            monthlyText.setText("Expires On: " + passInfo.get("monthly"));
-            ridesRemainingText.setText(passInfo.get("rides") + " rides remaining");
+
+            String monthly = passInfo.get("monthly");
+            if(monthly == null || monthly.equalsIgnoreCase("null")) {
+                monthly = "None";
+            }
+
+            String rides = passInfo.get("rides");
+            if(rides == null || rides.equalsIgnoreCase("null")) {
+                rides = "0";
+            }
+
+            monthlyText.setText("Expires On: " + monthly);
+            ridesRemainingText.setText(rides + " rides remaining");
         }
     };
 
@@ -95,13 +106,7 @@ public class LoginMain extends ActionBarActivity {
 
             }
         }
-        /*
-        if(nfcAdpt!=null) {
-            if (!nfcAdpt.isEnabled()) {
-                //Nfc settings are disabled
-                startNfcSettingsActivity();
-            }
-        }*/
+
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -198,7 +203,11 @@ public class LoginMain extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.profile) {
+        if (id == R.id.purchase_pass) {
+            unregisterReceiver(receiver);
+            startActivity(new Intent(this, PurchasePassActivity.class));
+            return true;
+        }else if (id == R.id.profile) {
             unregisterReceiver(receiver);
             startActivity(new Intent(this, ProfileActivity.class));
             return true;
