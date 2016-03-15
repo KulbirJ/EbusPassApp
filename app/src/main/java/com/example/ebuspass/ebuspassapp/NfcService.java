@@ -32,8 +32,12 @@ public class NfcService extends HostApduService {
 				rides = "0";
 			}
 
-			String response = key + monthly + rides;
-			Log.d("Returning", response);
+			String response= key + monthly + rides;
+            Log.d("NFC Response", response);
+
+            response = encrypt(response);
+            Log.d("NFC Encrypted", response);
+
 			return response.getBytes();
 		}
 		else {
@@ -47,8 +51,42 @@ public class NfcService extends HostApduService {
 			return null;
 		}
 	}
+    public String encrypt(String Text)
+    {
+        long m = 1;
+        int n = 14351;
+        int e = 11;
+        char[] plainText=Text.toCharArray();
+        String reply = "";
 
-	private boolean selectAidApdu(byte[] apdu) {
+
+        for(int i = 0; i < plainText.length; i++) {
+            for(int j = 0; j < e; j++) {
+                m = (m * plainText[i]) % n;
+            }
+
+            String x = Long.toHexString(m & 0x00ff);
+            String y = Long.toHexString((m & 0xff00) >> 8);
+
+            if(x.length() == 1) {
+                x = "0" + x;
+            }
+
+            if(y.length() == 1) {
+                y = "0" + y;
+            }
+
+            reply += x + y;
+
+            m = 1;
+        }
+
+        return reply;
+    }
+
+
+
+    private boolean selectAidApdu(byte[] apdu) {
 		return apdu.length >= 2 && apdu[0] == (byte)0 && apdu[1] == (byte)0xa4;
 	}
 
