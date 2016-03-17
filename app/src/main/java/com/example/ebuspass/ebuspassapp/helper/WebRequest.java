@@ -42,23 +42,22 @@ public final class WebRequest {
     }
 
     public static void checkForOutdatedPass(final SQLiteHandler sqlHandler, final Context context) {
-
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+            Intent intent = new Intent("com.ebuspass.updatepass");
+            context.sendBroadcast(intent);
             return;
         }
 
         final HashMap<String, String> userInfo = sqlHandler.getUserDetails();
         HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
-
         if(!passInfo.get("ridesTaken").equalsIgnoreCase("0")) {
             AsyncHttpResponseHandler asyncHandler = new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Log.d("checkForOutdatedPass", "Success");
                     String response = "";
                     JSONObject jObj = null;
 
@@ -83,7 +82,8 @@ public final class WebRequest {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    Log.d("checkForOutdatedPass", "Failure");
+                    Intent intent = new Intent("com.ebuspass.updatepass");
+                    context.sendBroadcast(intent);
                 }
             };
 

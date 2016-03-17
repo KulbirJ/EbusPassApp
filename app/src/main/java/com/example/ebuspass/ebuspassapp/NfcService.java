@@ -1,5 +1,6 @@
 package com.example.ebuspass.ebuspassapp;
 
+import android.content.Intent;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,7 @@ public class NfcService extends HostApduService {
 
 			String monthly = passInfo.get("monthlyPass");
 			String rides = passInfo.get("rides");
+			String ridesTaken = passInfo.get("ridesTaken");
 			String key = passInfo.get("key");
 
 			if(monthly == null || monthly.equalsIgnoreCase("None")) {
@@ -37,6 +39,8 @@ public class NfcService extends HostApduService {
 
 			if(rides == null) {
 				rides = "0";
+			} else if(!ridesTaken.equalsIgnoreCase("0")) {
+				rides = Integer.toString(Integer.parseInt(rides) - Integer.parseInt(ridesTaken));
 			}
 
 			String response= key + monthly + rides;
@@ -53,6 +57,7 @@ public class NfcService extends HostApduService {
 				Log.d("NFC", "Matches. Reduce");
 				sqlHandler.increaseRidesTaken(passInfo.get("username"));
 				WebRequest.checkForOutdatedPass(sqlHandler, this.getApplicationContext());
+				return "Success".getBytes();
 			}
 			Log.i("NFC", "Received: " + message);
 			return null;
@@ -61,10 +66,9 @@ public class NfcService extends HostApduService {
     public String encrypt(String Text)
     {
         long m = 1;
-        int n = 14351;
-        int e = 11;
+        int n = 5183;
+        int e = 79;
         char[] plainText=Text.toCharArray();
-        String reply = "";
 		StringBuilder stringBuilder = new StringBuilder();
 
         for(int i = 0; i < plainText.length; i++) {
@@ -83,16 +87,12 @@ public class NfcService extends HostApduService {
                 y = "0" + y;
             }
 
-			Log.d("x", x);
-			Log.d("y", y);
-
             stringBuilder.append(x);
 			stringBuilder.append(y);
 
             m = 1;
         }
 
-		Log.d("Length", Integer.toString(stringBuilder.toString().getBytes().length));
         return stringBuilder.toString();
     }
 
