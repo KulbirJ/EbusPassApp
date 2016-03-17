@@ -8,6 +8,7 @@ import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
 import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 import com.example.ebuspass.ebuspassapp.helper.WebRequest;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 public class NfcService extends HostApduService {
@@ -64,7 +65,7 @@ public class NfcService extends HostApduService {
         int e = 11;
         char[] plainText=Text.toCharArray();
         String reply = "";
-
+		StringBuilder stringBuilder = new StringBuilder();
 
         for(int i = 0; i < plainText.length; i++) {
             for(int j = 0; j < e; j++) {
@@ -82,12 +83,17 @@ public class NfcService extends HostApduService {
                 y = "0" + y;
             }
 
-            reply += x + y;
+			Log.d("x", x);
+			Log.d("y", y);
+
+            stringBuilder.append(x);
+			stringBuilder.append(y);
 
             m = 1;
         }
 
-        return reply;
+		Log.d("Length", Integer.toString(stringBuilder.toString().getBytes().length));
+        return stringBuilder.toString();
     }
 
 
