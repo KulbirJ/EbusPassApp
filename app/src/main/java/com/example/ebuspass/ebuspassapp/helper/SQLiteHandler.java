@@ -114,7 +114,7 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		values.put(SECURE_KEY, key);
 		values.put(KEY_UNAME, username);
 
-		if(getPassCount()==0) {
+		if(getPassCount(username)==0) {
 			long id = db.insert(TABLE_BUSPASS, null, values);
 			Log.d(TAG, "New Pass inserted into sqlite: " + id);
 		}
@@ -195,10 +195,17 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		return cnt;
 	}
 
-	public long getPassCount(){
+	public int getPassCount(String username){
 		SQLiteDatabase db = this.getReadableDatabase();
-		long cnt = DatabaseUtils.queryNumEntries(db, TABLE_BUSPASS);
-		return cnt;
+
+		String query = "SELECT * FROM " + TABLE_BUSPASS + " WHERE " + KEY_UNAME + " = '" +
+				username + "'";
+
+		Cursor cursor = db.rawQuery(query, null);
+
+		Log.d("PassCount", Integer.toString(cursor.getCount()));
+
+		return cursor.getCount();
 	}
 
 	public String getRidesTaken(String username)
