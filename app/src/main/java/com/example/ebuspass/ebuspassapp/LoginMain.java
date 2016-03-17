@@ -9,9 +9,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NfcAdapter;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -69,7 +67,6 @@ public class LoginMain extends ActionBarActivity {
     TextView monthlyText, ridesRemainingText;
     final Context context = this;
 
-    private String ridesRemaining, monthlyPass;
     SQLiteHandler sqlHandler ;
     @Override
     protected  void onCreate(Bundle savedInstanceState)
@@ -191,10 +188,8 @@ public class LoginMain extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-
-
-
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -204,22 +199,18 @@ public class LoginMain extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.purchase_pass) {
-            unregisterReceiver(receiver);
             startActivity(new Intent(this, PurchasePassActivity.class));
             return true;
         }else if (id == R.id.profile) {
-            unregisterReceiver(receiver);
             startActivity(new Intent(this, ProfileActivity.class));
             return true;
         }
         else if (id == R.id.purchase_history) {
-            unregisterReceiver(receiver);
             startActivity(new Intent(this, PurchaseHistoryActivity.class));
             return true;
         }
         else if (id == R.id.logout)
         {
-            unregisterReceiver(receiver);
             logoutUser();
             return true;
         }
@@ -253,5 +244,16 @@ public class LoginMain extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void onStop()
+    {
+        try {
+            unregisterReceiver(receiver);
+        } catch (Exception e) {
+            //Already unregistered
+        }
+
+        super.onStop();
+    }
 
 }
