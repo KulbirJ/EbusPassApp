@@ -66,7 +66,7 @@ public class ProfileActivity extends ActionBarActivity {
         ArrayList<BasicNameValuePair> dataToSend = new ArrayList<>();
         //dataToSend.add(new BasicNameValuePair("email","77065462@qq.com"));
         //dataToSend.add(new BasicNameValuePair("date_joined","2015-11-09 18:01:53"));
-        dataToSend.add(new BasicNameValuePair("email",useremail));
+        dataToSend.add(new BasicNameValuePair("email", useremail));
         dataToSend.add(new BasicNameValuePair("date_joined",userdateJoined));
 
         try {
@@ -204,12 +204,15 @@ public class ProfileActivity extends ActionBarActivity {
         else if (id == R.id.purchase_pass) {
             startActivity(new Intent(this, PurchasePassActivity.class));
             return true;
-        }else if (id == R.id.profile) {
-            startActivity(new Intent(this, PurchasePassActivity.class));
+        }else if (id == R.id.purchase_history) {
+            startActivity(new Intent(this, PurchaseHistoryActivity.class));
             return true;
         }
 
 
+
         return super.onOptionsItemSelected(item);
     }
+
+
 }
