@@ -181,7 +181,13 @@ public class LoginMain extends ActionBarActivity {
                 String monthly = passInfo.get("monthlyPass");
                 String rides = passInfo.get("rides");
                 String ridesTaken = passInfo.get("ridesTaken");
-                rides = Integer.toString(Integer.parseInt(rides) - Integer.parseInt(ridesTaken));
+                if(rides == null) {
+                    rides = "0";
+                } else if(!ridesTaken.equalsIgnoreCase("0")) {
+                    rides = Integer.toString(Integer.parseInt(rides) - Integer.parseInt(ridesTaken));
+                }
+                //rides = Integer.toString(Integer.parseInt(rides) - Integer.parseInt(ridesTaken));
+
                 monthlyText.setText("Expires On: " + monthly);
                 ridesRemainingText.setText(rides + " Rides Remaining");
                 Log.d("getPassInformation", "Offline");
