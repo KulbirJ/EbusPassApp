@@ -46,7 +46,7 @@ public class LoginMain extends ActionBarActivity {
             HashMap<String, String> userInfo = sqlHandler.getUserDetails();
             HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
 
-            String monthly = passInfo.get("monthly");
+            String monthly = passInfo.get("monthlyPass");
             if(monthly == null || monthly.equalsIgnoreCase("null")) {
                 monthly = "None";
             }
