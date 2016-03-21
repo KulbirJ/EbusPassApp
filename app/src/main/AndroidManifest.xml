@@ -41,12 +41,14 @@
 
         <activity
             android:name=".PurchasePassActivity"
+
             android:label="Refill Pass"
             android:theme="@style/AppTheme.ActionBar" >
         </activity>
         <activity
             android:name=".PurchaseHistoryActivity"
             android:label="Purchase History"
+
             android:theme="@style/AppTheme.ActionBar" >
         </activity>
         <activity

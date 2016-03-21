@@ -78,6 +78,7 @@ public class LoginMain extends ActionBarActivity {
         registerReceiver(receiver, new IntentFilter("com.ebuspass.updatepass"));
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.login_main);
 
         // Network connectivity check
@@ -211,18 +212,22 @@ public class LoginMain extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.purchase_pass) {
             startActivity(new Intent(this, PurchasePassActivity.class));
+
             return true;
         }else if (id == R.id.profile) {
             startActivity(new Intent(this, ProfileActivity.class));
+
             return true;
         }
         else if (id == R.id.purchase_history) {
             startActivity(new Intent(this, PurchaseHistoryActivity.class));
+
             return true;
         }
         else if (id == R.id.logout)
         {
             logoutUser();
+
             return true;
         }
 
@@ -234,7 +239,11 @@ public class LoginMain extends ActionBarActivity {
         db.deleteUsers();
 
         // Launching the login activity
-        Intent intent = new Intent(LoginMain.this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("finish", true); // if you are checking for this in your other Activities
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

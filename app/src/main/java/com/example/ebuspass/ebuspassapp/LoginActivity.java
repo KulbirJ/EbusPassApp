@@ -40,6 +40,7 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         inputusername = (EditText) findViewById(R.id.uname);
@@ -103,6 +104,7 @@ public class LoginActivity extends Activity {
                 String url = "https://www.ebuspass.com/accounts/password/reset/";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
+
             }
         });
 
