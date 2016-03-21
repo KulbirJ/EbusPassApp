@@ -205,7 +205,10 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 
 		Log.d("PassCount", Integer.toString(cursor.getCount()));
 
-		return cursor.getCount();
+		int passCount = cursor.getCount();
+		cursor.close();
+
+		return passCount;
 	}
 
 	public String getRidesTaken(String username)
