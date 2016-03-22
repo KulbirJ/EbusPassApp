@@ -24,6 +24,11 @@ public class SyncPass extends BroadcastReceiver {
     private SQLiteHandler sqlHandler = null;
 
     public void onReceive(Context context, Intent intent) {
+        SessionManager session = new SessionManager(context);
+        if(!session.isLoggedIn()) {
+            return;
+        }
+
         Log.d("app", "Network connectivity change");
 
         sqlHandler = new SQLiteHandler(context.getApplicationContext());
