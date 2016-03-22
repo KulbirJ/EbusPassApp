@@ -101,7 +101,6 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 		}
 		Log.d("Rows in user table", Long.toString(getProfilesCount()));
 		db.close();
-
 	}
 
 	public void addPass(String monthlyPass, String rides, String key, String username){
@@ -146,7 +145,8 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 			user.put("date_joined", cursor.getString(6));
 		}
 		cursor.close();
-		db.close();
+        db.close();
+
 		// return user
 		Log.d(TAG, "Fetching user from Sqlite: " + user.toString());
 
@@ -164,8 +164,22 @@ public class   SQLiteHandler extends SQLiteOpenHelper {
 
 		cursor.moveToFirst();
 		if (cursor.getCount() > 0){
-			pass.put("monthlyPass", cursor.getString(1));
-			pass.put("rides", cursor.getString(2));
+            String monthly = cursor.getString(1);
+            String rides = cursor.getString(2);
+            String ridesTaken = cursor.getString(3);
+
+            if(monthly == null || monthly.equalsIgnoreCase("None")) {
+                monthly = "2000/01/01";
+            }
+
+            if(rides == null) {
+                rides = "0";
+            } else if(!ridesTaken.equalsIgnoreCase("0")) {
+                rides = Integer.toString(Integer.parseInt(rides) - Integer.parseInt(ridesTaken));
+            }
+
+			pass.put("monthlyPass", monthly);
+			pass.put("rides", rides);
 			pass.put("ridesTaken", cursor.getString(3));
 			pass.put("key", cursor.getString(4));
 			pass.put("username", cursor.getString(5));

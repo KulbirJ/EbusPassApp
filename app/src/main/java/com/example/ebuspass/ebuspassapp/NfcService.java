@@ -30,18 +30,7 @@ public class NfcService extends HostApduService {
 
 			String monthly = passInfo.get("monthlyPass");
 			String rides = passInfo.get("rides");
-			String ridesTaken = passInfo.get("ridesTaken");
 			String key = passInfo.get("key");
-
-			if(monthly == null || monthly.equalsIgnoreCase("None")) {
-				monthly = "1990/01/01";
-			}
-
-			if(rides == null) {
-				rides = "0";
-			} else if(!ridesTaken.equalsIgnoreCase("0")) {
-				rides = Integer.toString(Integer.parseInt(rides) - Integer.parseInt(ridesTaken));
-			}
 
 			String response= key + monthly + rides;
             Log.d("NFC Response", response);

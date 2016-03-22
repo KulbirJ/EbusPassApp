@@ -64,8 +64,6 @@ public class ProfileActivity extends ActionBarActivity {
         String result = "";
         InputStream isr = null;
         ArrayList<BasicNameValuePair> dataToSend = new ArrayList<>();
-        //dataToSend.add(new BasicNameValuePair("email","77065462@qq.com"));
-        //dataToSend.add(new BasicNameValuePair("date_joined","2015-11-09 18:01:53"));
         dataToSend.add(new BasicNameValuePair("email", useremail));
         dataToSend.add(new BasicNameValuePair("date_joined",userdateJoined));
 
@@ -86,8 +84,6 @@ public class ProfileActivity extends ActionBarActivity {
             resultView.setText("Could not connect to database");
         }
 
-//convert response to String
-
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(isr, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
@@ -95,6 +91,7 @@ public class ProfileActivity extends ActionBarActivity {
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
             }
+            reader.close();
             isr.close();
             result = sb.toString();
             System.out.println(result);
@@ -168,11 +165,6 @@ public class ProfileActivity extends ActionBarActivity {
 
 
             }
-
-
-            //resultView.setText(s);
-            //System.out.println(s);
-
         } catch (Exception e) {
 //to do handle exception
             Log.e("Log_tag", "Error Parsing Data" + e.toString());

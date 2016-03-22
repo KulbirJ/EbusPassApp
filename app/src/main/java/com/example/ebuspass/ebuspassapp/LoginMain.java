@@ -47,17 +47,7 @@ public class LoginMain extends ActionBarActivity {
             HashMap<String, String> passInfo = sqlHandler.getPassDetails(userInfo.get("username"));
 
             String monthly = passInfo.get("monthlyPass");
-            if(monthly == null || monthly.equalsIgnoreCase("null")) {
-                monthly = "None";
-            }
-
             String rides = passInfo.get("rides");
-            String ridesTaken = passInfo.get("ridesTaken");
-            if(rides == null || rides.equalsIgnoreCase("null")) {
-                rides = "0";
-            } else if(!ridesTaken.equalsIgnoreCase("0")) {
-                rides = Integer.toString(Integer.parseInt(rides) - Integer.parseInt(ridesTaken));
-            }
 
             monthlyText.setText("Expires On: " + monthly);
             ridesRemainingText.setText(rides + " rides remaining");
