@@ -20,6 +20,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,6 +46,9 @@ public class PurchaseHistoryActivity extends ActionBarActivity {
     private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
     private final int FP = ViewGroup.LayoutParams.FILL_PARENT;
 
+    private SQLiteHandler db;
+    private SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,9 @@ public class PurchaseHistoryActivity extends ActionBarActivity {
         resultView = (TextView) findViewById(R.id.purchase_history_text);
         resultTable.setStretchAllColumns(true);
         getData();
+
+        db = new SQLiteHandler(getApplicationContext());
+        session = new SessionManager(getApplicationContext());
     }
 
     public void getData() {
@@ -67,7 +74,7 @@ public class PurchaseHistoryActivity extends ActionBarActivity {
         InputStream isr = null;
         ArrayList<BasicNameValuePair> dataToSend = new ArrayList<>();
         dataToSend.add(new BasicNameValuePair("email",useremail));
-        dataToSend.add(new BasicNameValuePair("date_joined",userdateJoined));
+        dataToSend.add(new BasicNameValuePair("date_joined", userdateJoined));
 
         try {
 
@@ -216,8 +223,26 @@ public class PurchaseHistoryActivity extends ActionBarActivity {
             startActivity(new Intent(this, PurchasePassActivity.class));
             return true;
         }
+        else if (id == R.id.logout)
+        {
+            logoutUser();
+            return true;
+        }
 
 
         return super.onOptionsItemSelected(item);
+    }
+    private void logoutUser() {
+        session.setLogin(false);
+        db.deleteUsers();
+
+        // Launching the login activity
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("finish", true); // if you are checking for this in your other Activities
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

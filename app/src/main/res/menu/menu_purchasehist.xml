@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".PurchaseHistoryActivity">
 
 
-
+    <item android:id="@+id/logout"
+        android:title="Logout"
+        app:showAsAction="always"/>
     <item android:id="@+id/loginmain"
         android:title="Home" />
     <item android:id="@+id/profile"

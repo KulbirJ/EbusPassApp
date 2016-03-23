@@ -19,6 +19,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import com.braintreepayments.api.*;
 import com.example.ebuspass.ebuspassapp.helper.SQLiteHandler;
+import com.example.ebuspass.ebuspassapp.helper.SessionManager;
 import com.example.ebuspass.ebuspassapp.helper.WebRequest;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -51,6 +52,8 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
     String token;
     String email;
     String dateJoined;
+    private SQLiteHandler db;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceSate){
@@ -112,6 +115,10 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
                 Log.d("Client Token", getToken());
             }
         });
+
+
+        db = new SQLiteHandler(getApplicationContext());
+        session = new SessionManager(getApplicationContext());
     }
 
     @Override
@@ -193,6 +200,10 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
         }
         else if (id == R.id.loginmain) {
             startActivity(new Intent(this, LoginMain.class));
+            return true;
+        } else if (id == R.id.logout)
+        {
+            logoutUser();
             return true;
         }
 
@@ -321,4 +332,18 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
         this.email = email;
     }
 
+
+    private void logoutUser() {
+        session.setLogin(false);
+        db.deleteUsers();
+
+        // Launching the login activity
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("finish", true); // if you are checking for this in your other Activities
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
 }
