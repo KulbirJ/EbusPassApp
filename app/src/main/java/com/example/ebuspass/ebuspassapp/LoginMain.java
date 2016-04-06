@@ -35,7 +35,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by Kulbir on 2015-12-20.
+ * On Successful login, fireup main activity
  */
 public class LoginMain extends ActionBarActivity {
 

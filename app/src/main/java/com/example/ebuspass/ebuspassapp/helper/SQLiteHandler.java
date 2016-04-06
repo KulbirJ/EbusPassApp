@@ -5,6 +5,9 @@
  * */
 package com.example.ebuspass.ebuspassapp.helper;
 
+/**
+ Sqlite database handler , creates database tables, add and updates enteties.
+ */
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

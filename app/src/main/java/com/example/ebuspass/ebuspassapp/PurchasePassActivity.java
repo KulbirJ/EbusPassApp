@@ -1,5 +1,9 @@
 package com.example.ebuspass.ebuspassapp;
 
+
+/**
+  Present option to purchase pass or rides .
+ */
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

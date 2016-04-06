@@ -17,7 +17,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by SimonHanna on 16-03-12.
+   Sends Broadcast receiver to check network connectivity
  */
 public class SyncPass extends BroadcastReceiver {
 

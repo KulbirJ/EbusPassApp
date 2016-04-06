@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by gangluo on 2016-02-20.
+ * Displays user profile info
  */
 
 public class ProfileActivity extends ActionBarActivity {

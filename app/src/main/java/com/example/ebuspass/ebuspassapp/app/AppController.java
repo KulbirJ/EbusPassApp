@@ -7,6 +7,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+/**
+ Configures app to use Volley library for php registration process
+ */
+
 public class AppController extends Application {
 
 	public static final String TAG = AppController.class.getSimpleName();

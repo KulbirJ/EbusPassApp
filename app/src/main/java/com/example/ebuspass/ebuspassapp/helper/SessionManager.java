@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+
+/**
+ Handles current active and inactive sessions.
+ */
 public class SessionManager {
 	// LogCat tag
 	private static String TAG = SessionManager.class.getSimpleName();

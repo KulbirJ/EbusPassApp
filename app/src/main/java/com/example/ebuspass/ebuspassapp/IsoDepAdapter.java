@@ -9,6 +9,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ Set up ISODepAdapter for NFC communication
+ */
 public class IsoDepAdapter extends BaseAdapter {
 
 	private LayoutInflater layoutInflater;

@@ -1,5 +1,10 @@
 package com.example.ebuspass.ebuspassapp;
 
+
+/**
+ Handles login form data .
+ */
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;

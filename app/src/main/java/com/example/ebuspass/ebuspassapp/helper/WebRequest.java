@@ -17,7 +17,7 @@ import java.util.HashMap;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by SimonHanna on 16-01-08.
+  Web request to the django framwork, to get/update pass information.
  */
 public final class WebRequest {
 

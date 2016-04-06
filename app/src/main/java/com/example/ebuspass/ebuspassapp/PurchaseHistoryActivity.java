@@ -1,7 +1,7 @@
 package com.example.ebuspass.ebuspassapp;
 
 /**
- * Created by gangluo on 2016-01-15.
+ * Shows Historical purchases
  */
 
 import android.app.Activity;

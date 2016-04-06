@@ -1,5 +1,9 @@
 package com.example.ebuspass.ebuspassapp;
 
+
+/**
+  Sets NFC message format
+ */
 import android.content.Intent;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
