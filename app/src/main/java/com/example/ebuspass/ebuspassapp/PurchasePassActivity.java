@@ -5,10 +5,12 @@ package com.example.ebuspass.ebuspassapp;
   Present option to purchase pass or rides .
  */
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
@@ -62,6 +65,18 @@ public class PurchasePassActivity extends ActionBarActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceSate){
         super.onCreate(savedInstanceSate);
+
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+            Bundle bundle = new Bundle();
+            bundle.putString("error", "You must be connected to the internet to make a purchase");
+            startActivity(new Intent(this, LoginMain.class).putExtras(bundle));
+            return;
+        }
+
         setContentView(R.layout.purchase_pass);
 
         CheckoutButton = (Button) findViewById(R.id.ButtonPurchase);

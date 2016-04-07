@@ -65,6 +65,12 @@ public class LoginMain extends ActionBarActivity {
     protected  void onCreate(Bundle savedInstanceState)
     {
 
+        if(this.getIntent().getExtras() != null &&
+                this.getIntent().getExtras().getString("error") != null) {
+            Toast.makeText(this, this.getIntent().getExtras().getString("error"),
+                    Toast.LENGTH_LONG).show();
+        }
+
         registerReceiver(receiver, new IntentFilter("com.ebuspass.updatepass"));
 
         super.onCreate(savedInstanceState);
