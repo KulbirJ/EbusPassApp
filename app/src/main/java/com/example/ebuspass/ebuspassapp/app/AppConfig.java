@@ -1,5 +1,5 @@
 package com.example.ebuspass.ebuspassapp.app;
-s
+
 /**
  Sets URLs for HTTPS access, that app uses for data transfer between backend and the cellular device.
  */
